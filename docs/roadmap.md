@@ -1,0 +1,51 @@
+# Programming
+- camera controller
+- configuration system
+- desktop input controller
+- loading world and character from local files
+- loading assets from remote files
+- caching assets in browser cache
+- character animation controller
+- dev console gui
+- world objects
+- menu gui
+- game object definitions
+- game loading and saving to local files
+- storing savegames in browser cache
+- loading new game state from remote server
+- non-player characters
+- npc routines
+- dialogue system
+- dialogue gui
+- quest system
+- character stat system
+- levelling system
+- equipment - items
+- equipment - gui
+- quest editor gui
+- shading/texturring
+- webpage with loader
+- magic fight
+- character creator gui
+- webpage signup with provider
+- server-side savegame
+- mobile support
+- multiplayer support
+- meele fight
+- character ai
+
+# Visuals
+- character model and animations
+- main location mesh
+- world objects
+- architecture sets
+- rendering settings
+- gui textures
+- gui font
+- character equipment
+- character body
+- inventory items
+- fight animations
+- item use textures
+- animal meshes and animations
+- item use animations
