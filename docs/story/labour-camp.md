@@ -1,0 +1,6 @@
+For many years, the kingdom has been conquesting neighboring lands in the name of spreading its religion. A lot of its knights and soldiers died during the battles, so eventually, every man able to fight is called to the army. Weapons and mercenaries cost a lot, so taxes are getting increased beyond limits.
+
+The only way to avoid recruitment and spare family from poverty and hunger is work in royal mines, ironworks and forges and military construction sites in the north. But king-tyrant has never had enough workers. After few years, he extended their settlements by closely guarded slave labor camps for alleged rebels and deserters. Eventually, guards let everyone understand that their work is no longer voluntary.
+
+In the cold mountains, prisoners of the largest camp are mining iron and silver and forging weapons and armors for the army. There is nowhere to run - outside of its walls, fugitives are awaited by mercenary bounty hunters, hostile wilderness and savage barbarians from the north. 
+Prisoners willing to work are living in crowded huts. Those who are disobedient or suspected of escape attempts are kept in extensive dungeons under the keep in the center of the camp. Few of them, reporting on fellow inmates and willing to cooperate, can be pardoned and hired as mercenaries. 
