@@ -2,6 +2,8 @@
 - camera controller
 - configuration system
 - desktop input controller
+- unity shell project
+- web shell
 - loading world and character from local files
 - loading assets from remote files
 - caching assets in browser cache
@@ -22,6 +24,7 @@
 - levelling system
 - equipment - items
 - equipment - gui
+- npc movement
 - quest editor gui
 - shading/texturring
 - webpage with loader
