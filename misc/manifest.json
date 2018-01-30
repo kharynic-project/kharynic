@@ -1,0 +1,14 @@
+{
+    "name": "Kharynic: The History of Mine Valley",
+    "description": "classic 3D role playing game in dark fantasy setting",
+    "icons": [{
+      "src": "/resources/images/icon.png",
+        "sizes": "256x256",
+        "type": "image/png"
+      }],
+    "start_url": "/index.html",
+    "display": "fullscreen",
+    "orientation": "landscape",
+    "background_color": "#000000",
+    "theme_color": "#782010"
+}
