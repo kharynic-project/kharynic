@@ -1,2 +1,4 @@
 **/temp
 unity-web-shell/Library
+**/Library/metadata
+**/Library/ShaderCache
