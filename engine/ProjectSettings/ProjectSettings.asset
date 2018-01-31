@@ -4,14 +4,13 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 14
-  productGUID: be9e1a9ad94b3374895d194c2022161f
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   defaultScreenOrientation: 4
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: kharynic.org
   productName: engine
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
