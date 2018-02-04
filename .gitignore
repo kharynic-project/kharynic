@@ -18,6 +18,8 @@ engine/ProjectSettings/TimeManager.asset
 engine/ProjectSettings/UnityConnectSettings.asset
 engine/Assembly-CSharp.csproj
 engine/engine.sln
+*.generated.cs
+
 
 engine/.vscode
 engine/.idea
