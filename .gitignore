@@ -17,11 +17,11 @@ engine/ProjectSettings/TagManager.asset
 engine/ProjectSettings/TimeManager.asset
 engine/ProjectSettings/UnityConnectSettings.asset
 engine/Assembly-CSharp.csproj
+engine/Assembly-CSharp-Editor.csproj
+engine/Assembly-CSharp-Editor-firstpass.csproj
 engine/engine.sln
 *.generated.cs
 
-
 engine/.vscode
 engine/.idea
-engine/Assembly-CSharp-Editor-firstpass.csproj
 engine/Assets/Plugins/Editor/JetBrains

@@ -21,11 +21,12 @@ rm    engine/ProjectSettings/TagManager.asset
 rm    engine/ProjectSettings/TimeManager.asset
 rm    engine/ProjectSettings/UnityConnectSettings.asset
 rm    engine/Assembly-CSharp.csproj
+rm    engine/Assembly-CSharp-Editor.csproj
+rm    engine/Assembly-CSharp-Editor-firstpass.csproj
 rm    engine/engine.sln
 
 rm -r engine/.vscode
 rm -r engine/.idea
-rm    engine/Assembly-CSharp-Editor-firstpass.csproj
 rm    engine/Assets/Plugins/Editor/JetBrains
 echo
 echo finished
