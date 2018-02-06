@@ -1,0 +1,18 @@
+body {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+}
+
+#Splash {
+    background-color: #751716;
+    background-image: url(../images/background.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+#unityLogo {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+}
