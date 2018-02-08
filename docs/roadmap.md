@@ -1,20 +1,16 @@
 # Programming
+- web shell : DONE
+- scripting system : WIP
 - camera controller
-- configuration system
 - desktop input controller
-- unity shell project
-- web shell
-- loading world and character from local files
-- loading assets from remote files
-- caching assets in browser cache
+- loading world and character from network
+- loading assets from network
 - character animation controller
-- dev console gui
 - world objects
 - menu gui
 - game object definitions
-- game loading and saving to local files
-- storing savegames in browser cache
-- loading new game state from remote server
+- game loading and saving to browser storage
+- loading saves (and "start" save) from network
 - non-player characters
 - npc routines
 - dialogue system
@@ -27,7 +23,6 @@
 - npc movement
 - quest editor gui
 - shading/texturring
-- webpage with loader
 - magic fight
 - character creator gui
 - webpage signup with provider
