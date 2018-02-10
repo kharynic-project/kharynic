@@ -36,11 +36,10 @@ window.WebHost = {
     },
     Init: function(host) {
         this.Host = host;
-        window.screen.orientation.lock('landscape').catch(function() { });
         this.ShowSplash();
         this.CreatePlayer();
         this.PlayerFrame.style.opacity = 0;
-        this.PrepareFullScreen();
+        this.PrepareScreen();
     },
     OnLoad: function () {
         this.Player = this.PlayerFrame.contentWindow.gameInstance;
@@ -53,7 +52,8 @@ window.WebHost = {
         this.PlayerFrame.style.opacity = 1;
         this.Splash.remove();
     },
-    PrepareFullScreen: function() {
+    PrepareScreen: function() {
+        try { window.screen.orientation.lock('landscape').catch(function() { }); } catch(e) {}
         document.addEventListener("click", function () {
             var docElm = document.documentElement;
             if (docElm.requestFullscreen) {
