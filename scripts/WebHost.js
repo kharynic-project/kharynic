@@ -36,14 +36,20 @@ window.WebHost = {
     },
     RequestFullscreen: function () {
         var host = window.WebHost.Host;
-        if (host.requestFullscreen)
-            host.requestFullscreen();
-        else if (host.mozRequestFullScreen)
-            host.mozRequestFullScreen();
-        else if (host.webkitRequestFullScreen)
-            host.webkitRequestFullScreen();
-        else if (this.Host.msRequestFullscreen)
-            host.msRequestFullscreen();
+        host.requestFullscreen = 
+            host.requestFullscreen ||
+            host.mozRequestFullScreen ||
+            host.webkitRequestFullScreen ||
+            host.msRequestFullscreen ||
+            function(){};
+        var canvas = window.WebHost.PlayerCanvas;
+        canvas.requestPointerLock = 
+            canvas.requestPointerLock ||
+            canvas.mozRequestPointerLock ||
+            canvas.webkitRequestPointerLock ||
+            function(){};
+        host.requestFullscreen();
+        canvas.requestPointerLock();
     },
     Init: function(host) {
         this.Host = host;
