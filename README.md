@@ -1,5 +1,5 @@
 # Kharynic: The History of Mine Valley
-![Temporary logo](https://avallach.ovh/images/kharynic-temporary-logo.jpg)
+![Temporary logo](resources/images/docs-header.jpg)
 
 Classic 3D cRPG in dark low fantasy setting. Brutal, grim world *almost* devoid of magic.
 
