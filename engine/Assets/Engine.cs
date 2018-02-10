@@ -2,6 +2,8 @@
 {
 	public class Engine
 	{
+		public static Engine Instance { get; } = new Engine();
+
 		private static void LogBuildInfo()
 		{
 			Debug.Log(
@@ -12,11 +14,17 @@
 			    $"    *** from: {BuildInfo.LocalProjectPath} by {BuildInfo.User}");
 		}
 
-		[UnityEngine.RuntimeInitializeOnLoadMethod]
-		public static void Main()
+		public void Main(string[] args)
 		{
 			LogBuildInfo();
+			if (args.Length > 0)
+				Debug.Log($"args: {string.Join(" ", args)}");
 			Scripts.OnLoad();
+		}
+
+		public void Dispose()
+		{
+			Debug.Log("engine shutdown");
 		}
 	}
 }
