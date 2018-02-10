@@ -34,12 +34,24 @@ window.WebHost = {
         }
         this.Host.appendChild(this.PlayerFrame);
     },
+    RequestFullscreen: function () {
+        var host = window.WebHost.Host;
+        if (host.requestFullscreen)
+            host.requestFullscreen();
+        else if (host.mozRequestFullScreen)
+            host.mozRequestFullScreen();
+        else if (host.webkitRequestFullScreen)
+            host.webkitRequestFullScreen();
+        else if (this.Host.msRequestFullscreen)
+            host.msRequestFullscreen();
+    },
     Init: function(host) {
         this.Host = host;
         this.ShowSplash();
         this.CreatePlayer();
         this.PlayerFrame.style.opacity = 0;
-        this.PrepareScreen();
+        try { window.screen.orientation.lock('landscape').catch(function() { }); } catch(e) {}
+        this.Host.addEventListener("click", this.RequestFullscreen);
     },
     OnLoad: function () {
         this.Player = this.PlayerFrame.contentWindow.gameInstance;
@@ -51,23 +63,6 @@ window.WebHost = {
 
         this.PlayerFrame.style.opacity = 1;
         this.Splash.remove();
-    },
-    PrepareScreen: function() {
-        try { window.screen.orientation.lock('landscape').catch(function() { }); } catch(e) {}
-        document.addEventListener("click", function () {
-            var docElm = document.documentElement;
-            if (docElm.requestFullscreen) {
-                docElm.requestFullscreen();
-            }
-            else if (docElm.mozRequestFullScreen) {
-                docElm.mozRequestFullScreen();
-            }
-            else if (docElm.webkitRequestFullScreen) {
-                docElm.webkitRequestFullScreen();
-            }
-            else if (docElm.msRequestFullscreen) {
-                docElm.msRequestFullscreen();
-            }
-        });
+        this.PlayerCanvas.addEventListener("click", this.RequestFullscreen);
     }
 };
