@@ -40,6 +40,7 @@ window.WebHost = {
         this.ShowSplash();
         this.CreatePlayer();
         this.PlayerFrame.style.opacity = 0;
+        this.PrepareFullScreen();
     },
     OnLoad: function () {
         this.Player = this.PlayerFrame.contentWindow.gameInstance;
@@ -51,5 +52,22 @@ window.WebHost = {
 
         this.PlayerFrame.style.opacity = 1;
         this.Splash.remove();
+    },
+    PrepareFullScreen: function() {
+        document.addEventListener("click", function () {
+            var docElm = document.documentElement;
+            if (docElm.requestFullscreen) {
+                docElm.requestFullscreen();
+            }
+            else if (docElm.mozRequestFullScreen) {
+                docElm.mozRequestFullScreen();
+            }
+            else if (docElm.webkitRequestFullScreen) {
+                docElm.webkitRequestFullScreen();
+            }
+            else if (docElm.msRequestFullscreen) {
+                docElm.msRequestFullscreen();
+            }
+        });
     }
 };
