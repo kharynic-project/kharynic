@@ -1,8 +1,8 @@
 ﻿namespace org.kharynic
 {
-	public class Engine : UnityEngine.MonoBehaviour
+	public class Engine
 	{
-		private void LogBuildInfo()
+		private static void LogBuildInfo()
 		{
 			Debug.Log(
 				$"*** Kharynic Engine v{BuildInfo.Version} - developed 2018 Kharynic Project\n" +
@@ -11,7 +11,9 @@
 			    $"    *** built with {BuildInfo.Toolset} for {BuildInfo.Platform}+{BuildInfo.Runtime}+{BuildInfo.TranspilationTarget}\n" +
 			    $"    *** from: {BuildInfo.LocalProjectPath} by {BuildInfo.User}");
 		}
-		public void Start()
+
+		[UnityEngine.RuntimeInitializeOnLoadMethod]
+		public static void Main()
 		{
 			LogBuildInfo();
 			Scripts.OnLoad();
