@@ -23,12 +23,16 @@ namespace org.kharynic
                 var fileName = callerFilePath.Substring(fileNameStartIndex);
                 var sourceInfo = $" <{fileName},#{callerLineNumber}>";
                 const int logWidth = 80;
+                const string timeFormat = "ss.fff ";
                 var infoStartColumn = logWidth - sourceInfo.Length;
-                message = message.PadRight(infoStartColumn) + sourceInfo;
+                message = DateTime.Now.ToString(timeFormat) + message;
+                var lines = message.Split('\n');
+                lines[lines.Length - 1] = lines[lines.Length - 1].PadRight(infoStartColumn);
+                message = string.Join("\n", lines) + sourceInfo;
             }
             #if UNITY_EDITOR
                 UnityEngine.Debug.Log(message);
-                File.AppendAllText(LogFile, $"{DateTime.Now:mm:ss.ffffff} {message}\n");
+                File.AppendAllText(LogFile, $"{message}\n");
             #else
                 Scripts.Log(message);
             #endif
