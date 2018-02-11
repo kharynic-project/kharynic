@@ -1,11 +1,14 @@
 mergeInto(LibraryManager.library, {
   OnLoad: function () {
-    window.WebHost.OnLoad();
+    window.WebHost.Scripts.OnLoad();
   },
   Execute: function (code) {
-    window.eval(Pointer_stringify(code));
+    window.WebHost.Scripts.Execute(Pointer_stringify(code));
   },
   Log: function (message) {
-    window.console.log(Pointer_stringify(message)); 
+    window.WebHost.Scripts.Log(Pointer_stringify(message)); 
   },
+  RegisterExternal: function(name, functionPtr) {
+    window.WebHost.Scripts.RegisterExternal(Pointer_stringify(name), functionPtr);
+  }
 });

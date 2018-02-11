@@ -51,9 +51,15 @@ window.WebHost = {
         host.requestFullscreen();
         canvas.requestPointerLock();
     },
+    LoadScripts: function() {
+        var script = document.createElement("script");
+        script.setAttribute("src", "scripts/Scripts.js");
+        document.head.appendChild(script);
+    },
     Init: function(host) {
         this.Host = host;
         this.ShowSplash();
+        this.LoadScripts();
         this.CreatePlayer();
         this.PlayerFrame.style.opacity = 0;
         try { window.screen.orientation.lock('landscape').catch(function() { }); } catch(e) {}
