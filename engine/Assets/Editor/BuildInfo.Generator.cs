@@ -22,23 +22,23 @@ namespace org.kharynic.Editor
             {
                 var code = new StringBuilder(
                     "using System.Collections.Generic;\n" +
-                    "namespace org.kharynic\n" +
+                    $"namespace {typeof(kharynic.BuildInfo).Namespace}\n" +
                     "{\n" +
-                    "    public static partial class BuildInfo\n" +
+                    $"    public static partial class {nameof(BuildInfo)}\n" +
                     "    {\n");
-                GenerateBuildInfo(code, target);
+                Generate(code, target);
                 code.Append("\n");
                 GenerateCompilationSymbols(code);
                 code.Append(
                     "    }\n" +
                     "}\n");
-                WriteGeneratedCode(code.ToString(), "BuildInfo.generated.cs");
+                GeneratorUtils.WriteFile(code.ToString(), $"{nameof(BuildInfo)}.generated.cs");
                 //TODO: explore usages of EditorUtility.CompileCSharp()
             }
 
             private static string IncrementBuildNumberAndGetVersion()
             {
-                var filePath = Application.dataPath + "/Editor/BuildInfo.Version.txt";
+                var filePath = Application.dataPath + $"/Editor/{nameof(BuildInfo)}.Version.txt";
 
                 // major.minor.build+hash
                 var version = File.ReadAllText(filePath).Split('.', '+').ToArray();
@@ -49,22 +49,8 @@ namespace org.kharynic.Editor
                 return versionString;
             }
 
-            private static string GetHeaderComment([CallerMemberName] string callerMemberName = null)
-            {
-                return
-                    $"// generated on {DateTime.Now:yyyy.MM.dd HH:mm} by {typeof(Generator).FullName}" +
-                    ((callerMemberName != null) ? $".{callerMemberName}" : "");
-            }
 
-            private static void WriteGeneratedCode(string code, string path)
-            {
-                // editor has to use stubs from repository instead or build won't start
-                code = "#if !UNITY_EDITOR\n\n" + code + "\n#endif\n";
-                File.WriteAllText(Application.dataPath + "/" + path, code);
-                AssetDatabase.Refresh();
-            }
-
-            private static void GenerateBuildInfo(StringBuilder code, BuildTarget target)
+            private static void Generate(StringBuilder code, BuildTarget target)
             {
                 var buildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
                 var buildNumber = IncrementBuildNumberAndGetVersion();
@@ -78,7 +64,7 @@ namespace org.kharynic.Editor
                     {"LocalAssetsPath", Application.dataPath},
                     {"Version", buildNumber}
                 };
-                code.Append($"        {GetHeaderComment()}\n");
+                code.Append($"        {GeneratorUtils.GetHeaderComment()}\n");
                 foreach (var field in fields)
                     code.Append(
                         $"        public const string {field.Key} = \"{field.Value}\";\n");
@@ -87,10 +73,10 @@ namespace org.kharynic.Editor
             private static void GenerateCompilationSymbols(StringBuilder code)
             {
                 // source: csproj file + unity docs
-                var listPath = Application.dataPath + "/Editor/BuildInfo.DefinedSymbols.txt";
+                var listPath = Application.dataPath + $"/Editor/{nameof(BuildInfo)}.DefinedSymbols.txt";
                 var symbols = File.ReadAllLines(listPath);
                 code.Append(
-                    $"        {GetHeaderComment()}\n" +
+                    $"        {GeneratorUtils.GetHeaderComment()}\n" +
                     "        public static readonly IEnumerable<string> DefinedSymbols = new[]\n" +
                     "        {\n");
                 foreach (var symbol in symbols)
