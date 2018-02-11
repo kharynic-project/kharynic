@@ -5,6 +5,7 @@ window.WebHost = {
     PlayerCanvas: undefined,
     Player: undefined,
     Splash: undefined,
+    Scripts: undefined,
     ShowSplash: function() {
         this.Splash = document.createElement("div");
         this.Splash.id = "Splash";
@@ -14,6 +15,10 @@ window.WebHost = {
         unityLogo.src = "resources/images/unity.png";
         this.Splash.appendChild(unityLogo);
         this.Host.appendChild(this.Splash);
+    },
+    HideSplash: function() {
+        this.PlayerFrame.style.opacity = 1;
+        this.Splash.remove();
     },
     Maximize: function(element) {
         element.style.position = "absolute";
@@ -51,10 +56,15 @@ window.WebHost = {
         host.requestFullscreen();
         canvas.requestPointerLock();
     },
-    LoadScripts: function() {
+    LoadScript: function(path) {
         var script = document.createElement("script");
-        script.setAttribute("src", "scripts/Scripts.js");
+        script.setAttribute("src", "scripts/" + path);
         document.head.appendChild(script);
+    },
+    LoadScripts: function() {
+        this.LoadScript("Scripts.js");
+        this.LoadScript("Engine.js");
+        this.LoadScript("Engine.generated.js");
     },
     Init: function(host) {
         this.Host = host;
@@ -72,9 +82,7 @@ window.WebHost = {
         this.PlayerCanvas = this.GameContainer.getElementsByTagName("canvas")[0];
         this.Maximize(this.PlayerCanvas);
         this.Host.onresize = function () { WebHost.Maximize(WebHost.PlayerCanvas); };
-
-        this.PlayerFrame.style.opacity = 1;
-        this.Splash.remove();
+        this.HideSplash();
         this.PlayerCanvas.addEventListener("click", this.RequestFullscreen);
     }
 };
