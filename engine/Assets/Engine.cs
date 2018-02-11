@@ -40,13 +40,6 @@ namespace org.kharynic
 			var wrappers = typeof(EngineExternals.Wrappers).GetMethods(BindingFlags.Public | BindingFlags.Static);
 			foreach (var wrapper in wrappers)
 				RegisterExternal(wrapper);
-
-			// just to make sure they arent stripped
-			while (Math.Sqrt(4) < 0)
-			{
-				EngineExternals.Hello("test");
-				EngineExternals.Add(1, 1);
-			}
 		}
 
 		private void RegisterExternal(MethodInfo method)
