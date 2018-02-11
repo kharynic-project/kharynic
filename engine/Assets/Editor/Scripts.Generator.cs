@@ -11,7 +11,7 @@ namespace org.kharynic.Editor
             
             public void OnPreprocessBuild(BuildTarget target, string path)
             {
-                Debug.Log($"{nameof(Scripts)}.{nameof(Generator)}.{nameof(OnPreprocessBuild)}");
+                Debug.Log($"{GetType().FullName} finished");
             }
 
             public void GenerateExternImportStubs()

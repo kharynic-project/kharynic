@@ -21,7 +21,6 @@ namespace org.kharynic.Editor
             public void OnPreprocessBuild(BuildTarget target, string path)
             {
                 var code = new StringBuilder(
-                    "using System.Collections.Generic;\n" +
                     $"namespace {typeof(kharynic.BuildInfo).Namespace}\n" +
                     "{\n" +
                     $"    public static partial class {nameof(BuildInfo)}\n" +
@@ -33,6 +32,7 @@ namespace org.kharynic.Editor
                     "    }\n" +
                     "}\n");
                 GeneratorUtils.WriteFile(code.ToString(), $"{nameof(BuildInfo)}.generated.cs");
+                Debug.Log($"{GetType().FullName} finished");
                 //TODO: explore usages of EditorUtility.CompileCSharp()
             }
 
@@ -45,6 +45,7 @@ namespace org.kharynic.Editor
                 version[2] = (int.Parse(version[2]) + 1).ToString();
                 version[3] = Guid.NewGuid().GetHashCode().ToString("x8").Substring(0, 3);
                 var versionString = $"{version[0]}.{version[1]}.{version[2]}+{version[3]}";
+                kharynic.BuildInfo.Version = versionString;
                 File.WriteAllText(filePath, versionString);
                 return versionString;
             }
@@ -77,7 +78,7 @@ namespace org.kharynic.Editor
                 var symbols = File.ReadAllLines(listPath);
                 code.Append(
                     $"        {GeneratorUtils.GetHeaderComment()}\n" +
-                    "        public static readonly IEnumerable<string> DefinedSymbols = new[]\n" +
+                    $"        public static readonly {typeof(IEnumerable<>).Namespace}.{nameof(IEnumerable<string>)}<string> DefinedSymbols = new[]\n" +
                     "        {\n");
                 foreach (var symbol in symbols)
                     code.Append(
