@@ -25,3 +25,6 @@ engine/engine.sln
 engine/.vscode
 engine/.idea
 engine/Assets/Plugins/Editor/JetBrains
+engine/Assembly-CSharp-Editor.csproj.DotSettings
+
+engine/Assets/UnityStandardAssets
