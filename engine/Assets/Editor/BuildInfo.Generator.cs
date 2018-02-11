@@ -36,14 +36,6 @@ namespace org.kharynic.Editor
                 //TODO: explore usages of EditorUtility.CompileCSharp()
             }
 
-            private static string SetField(string code, string fieldName, string value)
-            {
-                const string prefix = "public const string ";
-                var template = $"{prefix}{fieldName} *= *\"[^\"]*\" *;";
-                var replacement = $"{prefix}{fieldName} = \"{value}\";";
-                return new Regex(template).Replace(code, replacement);
-            }
-
             private static string IncrementBuildNumberAndGetVersion()
             {
                 var filePath = Application.dataPath + "/Editor/BuildInfo.Version.txt";
