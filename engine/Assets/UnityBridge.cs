@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 namespace org.kharynic
@@ -15,13 +16,14 @@ namespace org.kharynic
 
         public void Start()
         {
-            Engine.Instance.Main(Environment.GetCommandLineArgs());
-            StartCoroutine(LogFramerates(interval: TimeSpan.FromSeconds(3)));
+            Engine.Instance.Main(Environment.GetCommandLineArgs().Skip(1).ToArray());
+            StartCoroutine(LogFramerates(interval: TimeSpan.FromSeconds(10)));
         }
 
         public void OnDestroy()
         {
             Engine.Instance.Dispose();
+            Application.Quit();
         }
 
         private bool _highGraphicSettings = false;
@@ -50,6 +52,7 @@ namespace org.kharynic
             var lastTotalTime = 0f;
             while (true)
             {
+                yield return new WaitForSeconds((float)interval.TotalSeconds);
                 var frameCount = Time.frameCount;
                 var totalTime = Time.realtimeSinceStartup;
                 var framerate = (frameCount - lastFrameCount) / (totalTime - lastTotalTime);
@@ -60,7 +63,6 @@ namespace org.kharynic
                     HighGraphicSettings = true;
                 else if (framerate < 30)
                     HighGraphicSettings = false;
-                yield return new WaitForSeconds((float)interval.TotalSeconds);
             }
         }
     }

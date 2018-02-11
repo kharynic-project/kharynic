@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace org.kharynic
 {
     public static class Debug
     {
+        public static string LogFile = UnityEngine.Application.dataPath + "/debug.log";
         private static readonly char[] PathSeparators = {'/','\\'};
+        
         public static void Log(
             string message,
             [CallerFilePath] string callerFilePath = null,
@@ -24,9 +28,35 @@ namespace org.kharynic
             }
             #if UNITY_EDITOR
                 UnityEngine.Debug.Log(message);
+                File.AppendAllText(LogFile, $"{DateTime.Now:mm:ss.ffffff} {message}\n");
             #else
                 Scripts.Log(message);
             #endif
+        }
+
+        public static string GetFullObjectName(UnityEngine.Object @object)
+        {
+            if (@object.GetType() != typeof(UnityEngine.Object))
+                return @object.GetType().FullName;
+            var stringRep = @object.ToString();
+            var typeNameStart = stringRep.IndexOf('(');
+            var typeNameEnd = stringRep.IndexOf(')');
+            if (typeNameStart > 0 && typeNameEnd > 0)
+                return stringRep.Substring(typeNameStart + 1, typeNameEnd - typeNameStart - 1);
+            return @object.name;
+        }
+
+        public static IEnumerable<UnityEngine.Object> GetEngineObjects()
+        {
+            return UnityEngine.Object.FindObjectsOfType(typeof(UnityEngine.Object))
+                .Where(o => !(o is UnityEngine.GameObject) && !(o is UnityEngine.Component))
+                .Where(o => GetFullObjectName(o)?.StartsWith($"{typeof(UnityEngine.Object).Namespace}.") == true);
+        }
+        
+        public static void LogEngineObjects()
+        {
+            var engineObjects = GetEngineObjects().ToArray();
+            Log($"{engineObjects.Length} engine objects found: \n{string.Join("\n", engineObjects.Select(GetFullObjectName))}");
         }
     }
 }

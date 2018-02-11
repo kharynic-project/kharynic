@@ -15,9 +15,28 @@ namespace org.kharynic
 			LogBuildInfo();
 			if (args.Length > 0)
 				Debug.Log($"args: {string.Join(" ", args)}");
-			// todo: Create camera and list hidden objects for debugging
+			Debug.LogEngineObjects();
 			RegisterExternals();
 			Scripts.OnLoad();
+			CreateCamera();
+		}
+
+		private void CreateCamera()
+		{
+			foreach (var otherCamera in UnityEngine.Camera.allCameras)
+				UnityEngine.Object.Destroy(otherCamera.gameObject);
+			var gameObject = new UnityEngine.GameObject
+			{
+				name = "MainCamera",
+				tag = "MainCamera"
+			};
+			var camera = gameObject.AddComponent<UnityEngine.Camera>();
+			camera.clearFlags = UnityEngine.CameraClearFlags.Color;
+			camera.backgroundColor = UnityEngine.Color.black;
+			camera.useOcclusionCulling = true;
+			camera.allowHDR = false;
+			camera.allowMSAA = false;
+			camera.allowDynamicResolution = true;
 		}
 
 		public void Dispose()
@@ -33,6 +52,9 @@ namespace org.kharynic
 				$"    *** compiled on {BuildInfo.BuildDate}, {BuildInfo.Type}-build, config {BuildInfo.Config}\n" +
 				$"    *** built with {BuildInfo.Toolset} for {BuildInfo.Platform}+{BuildInfo.Runtime}+{BuildInfo.TranspilationTarget}\n" +
 				$"    *** from: {BuildInfo.LocalProjectPath} by {BuildInfo.User}");
+			#if UNITY_EDITOR
+				Debug.Log($"{DateTime.Now:yyyy.MM.dd.HH:mm} Writing log to {Debug.LogFile}");
+			#endif
 		}
 		
 		private void RegisterExternals()
