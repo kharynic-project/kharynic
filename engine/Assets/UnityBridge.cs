@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -7,6 +8,9 @@ namespace org.kharynic
 {
     public class UnityBridge : MonoBehaviour
     {
+        private UnityEngine.Camera _camera;
+        private Engine _engine = Engine.Instance;
+        
         [RuntimeInitializeOnLoadMethod]
         public static void Main()
         {
@@ -16,54 +20,67 @@ namespace org.kharynic
 
         public void Start()
         {
-            Engine.Instance.Main(Environment.GetCommandLineArgs().Skip(1).ToArray());
-            StartCoroutine(LogFramerates(interval: TimeSpan.FromSeconds(10)));
+            _engine.Main(Environment.GetCommandLineArgs().Skip(1).ToArray());
+            CreateCamera();
         }
 
         public void OnDestroy()
         {
-            Engine.Instance.Dispose();
+            _engine.Dispose();
             Application.Quit();
         }
 
-        private bool _highGraphicSettings = false;
-        private int _graphicSettingsSwitchCount = 0;
-        private bool HighGraphicSettings
+        private void CreateCamera()
         {
-            get { return _highGraphicSettings; }
-            set
+            foreach (var otherCamera in UnityEngine.Camera.allCameras)
+                UnityEngine.Object.Destroy(otherCamera.gameObject);
+            var gameObject = new UnityEngine.GameObject
             {
-                if (value == _highGraphicSettings)
-                    return;
-                _graphicSettingsSwitchCount++;
-                Debug.Log($"Switching graphic settings to {(value ? "high" : "low")}");
-                _highGraphicSettings = value;
-                QualitySettings.shadows = value ? ShadowQuality.All : ShadowQuality.HardOnly;
-                QualitySettings.shadowResolution = value ? ShadowResolution.High : ShadowResolution.Low;
-                QualitySettings.shadowCascades = value ? 4 : 1;
-                QualitySettings.shadowDistance = value ? 30 : 10;
-                QualitySettings.antiAliasing = value ? 2 : 0;
-            }
+                name = "MainCamera",
+                tag = "MainCamera"
+            };
+            _camera = gameObject.AddComponent<UnityEngine.Camera>();
+            _camera.clearFlags = UnityEngine.CameraClearFlags.Color;
+            _camera.backgroundColor = UnityEngine.Color.black;
+            _camera.useOcclusionCulling = true;
+            _camera.allowHDR = false;
+            _camera.allowMSAA = false;
+            _camera.allowDynamicResolution = true;
         }
+
+
         
-        IEnumerator LogFramerates(TimeSpan interval)
-        {
-            var lastFrameCount = 0;
-            var lastTotalTime = 0f;
-            while (true)
-            {
-                yield return new WaitForSeconds((float)interval.TotalSeconds);
-                var frameCount = Time.frameCount;
-                var totalTime = Time.realtimeSinceStartup;
-                var framerate = (frameCount - lastFrameCount) / (totalTime - lastTotalTime);
-                Debug.Log($"Framerate: {framerate:F1}fps");
-                lastFrameCount = frameCount;
-                lastTotalTime = totalTime;
-                if (framerate > 50 && _graphicSettingsSwitchCount < 3)
-                    HighGraphicSettings = true;
-                else if (framerate < 30)
-                    HighGraphicSettings = false;
-            }
-        }
+//        IEnumerator LogFramerates(TimeSpan interval)
+//        {
+//            var lastFrameCount = 0;
+//            var lastTotalTime = 0f;
+//            var highGraphicSettings = false;
+//            var graphicSettingsSwitchCount = 0;
+//            var framerate = 40f;
+//            Action<bool> setGraphicSettings = high =>
+//            {
+//                graphicSettingsSwitchCount++;
+//                highGraphicSettings = high;
+//                Debug.Log($"{framerate}fps, switching graphic settings to {(high ? "high" : "low")}");
+//                QualitySettings.shadows = high ? ShadowQuality.All : ShadowQuality.HardOnly;
+//                QualitySettings.shadowResolution = high ? ShadowResolution.High : ShadowResolution.Low;
+//                QualitySettings.shadowCascades = high ? 4 : 1;
+//                QualitySettings.shadowDistance = high ? 30 : 10;
+//                QualitySettings.antiAliasing = high ? 2 : 0;
+//            };
+//            while (true)
+//            {
+//                yield return new WaitForSeconds((float)interval.TotalSeconds);
+//                var frameCount = Time.frameCount;
+//                var totalTime = Time.realtimeSinceStartup;
+//                framerate = (frameCount - lastFrameCount) / (totalTime - lastTotalTime);
+//                lastFrameCount = frameCount;
+//                lastTotalTime = totalTime;
+//                if (framerate > 50 && !highGraphicSettings && graphicSettingsSwitchCount < 3)
+//                    setGraphicSettings(true);
+//                else if (framerate < 30)
+//                    setGraphicSettings(false);
+//            }
+//        }
     }
 }
