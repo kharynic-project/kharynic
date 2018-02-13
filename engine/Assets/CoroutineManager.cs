@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace org.kharynic
 {
@@ -15,12 +16,10 @@ namespace org.kharynic
 
         private class CoroutineManagerUnityHost : UnityEngine.MonoBehaviour
         {
-            public CoroutineManager _manager;
+            public CoroutineManager Manager { private get; set; }
             private void OnDestroy()
             {
-                Debug.Log($"{nameof(CoroutineManager)}.{nameof(_unityHost)} destroying");
-//                _manager._unityHost = null;
-                _manager.Dispose();
+                Manager.Dispose();
             }
         }
 
@@ -28,13 +27,13 @@ namespace org.kharynic
         {
             _unityHost = new UnityEngine.GameObject(nameof(CoroutineManager))
                 .AddComponent<CoroutineManagerUnityHost>();
-            _unityHost._manager = this;
+            _unityHost.Manager = this;
             Debug.Log($"{nameof(CoroutineManager)}.{nameof(Start)}");
         }
 
         private IEnumerator CreateEnumerator(
             Action loop, 
-            TimeSpan interval, 
+            TimeSpan? interval, 
             string id,
             bool autoRestart)
         {
@@ -59,8 +58,8 @@ namespace org.kharynic
                         yield break;
                     }
                 }
-                if (interval != default(TimeSpan))
-                    yield return new UnityEngine.WaitForSeconds((float) interval.TotalSeconds);
+                if (interval != null)
+                    yield return new UnityEngine.WaitForSeconds((float) interval.Value.TotalSeconds);
                 else
                     yield return null;
             }
@@ -68,15 +67,18 @@ namespace org.kharynic
         
         public string StartCoroutine(
             Action loop, 
-            TimeSpan interval = default(TimeSpan),
+            [CanBeNull] string name = null,
+            TimeSpan? interval = null,
             bool autoRestart = false,
             [CallerFilePath] string callerFilePath = "/anonymous.")
         {
+            if (name != null && _coroutines.ContainsKey(name))
+                throw new ArgumentException("already exists", nameof(name));
             if (_unityHost == null)
                 throw new ObjectDisposedException(nameof(CoroutineManager));
             var nameStart = callerFilePath.LastIndexOfAny(new[] {'/', '\\'}) + 1;
             var nameLength = callerFilePath.LastIndexOf('.') - nameStart;
-            var id = $"{_nextId}.{callerFilePath.Substring(nameStart, nameLength)}";
+            var id = name ?? $"{_nextId}.{callerFilePath.Substring(nameStart, nameLength)}";
             _nextId += 1;
             var enumerator = CreateEnumerator(loop, interval, id, autoRestart);
             var coroutine = _unityHost.StartCoroutine(enumerator);
@@ -100,7 +102,6 @@ namespace org.kharynic
             var coroutine = _coroutines[id];
             _coroutines.Remove(id);
             _unityHost.StopCoroutine(coroutine);
-            Debug.Log($"Coroutine stopped: {id}");
         }
 
         public void Dispose()

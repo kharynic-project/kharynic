@@ -36,7 +36,7 @@ namespace org.kharynic
                     SetGraphicSettings(true);
                 else if (_framerate < 30 && _highGraphicSettings)
                     SetGraphicSettings(false);
-            }, interval);
+            }, nameof(MonitorFramerate), interval);
         }
     }
 }
