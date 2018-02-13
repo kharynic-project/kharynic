@@ -1,25 +1,115 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 namespace org.kharynic
 {
     public class CoroutineManager : IDisposable
     {
-        private readonly Dictionary<string, UnityEngine.Coroutine> _coroutines = new Dictionary<string, UnityEngine.Coroutine>();
+        private readonly List<Coroutine> _coroutines = new List<Coroutine>();
         private CoroutineManagerUnityHost _unityHost;
-        private int _nextId = 0;
 
-        private class CoroutineManagerUnityHost : UnityEngine.MonoBehaviour
+        private class CoroutineManagerUnityHost : UnityEngine.MonoBehaviour { }
+
+        public Coroutine StartCoroutine(
+            Action loop,
+            string name,
+            TimeSpan? interval = null,
+            bool autoRestart = false)
         {
-            public CoroutineManager Manager { private get; set; }
-            private void OnDestroy()
+            var coroutine = new Coroutine(loop, name, interval, autoRestart);
+            coroutine.Start(this);
+            return coroutine;
+        }
+
+        public class Coroutine : IDisposable
+        {
+            public string Name { get; }
+            public TimeSpan? Interval { get; }
+            public bool AutoRestart { get; }
+            public Action Loop { get; }
+            public bool Suspended { get; set; }
+            private CoroutineManager _manager;
+            private UnityEngine.Coroutine _coroutine;
+
+            public Coroutine(
+                Action loop, 
+                string name, 
+                TimeSpan? interval = null,
+                bool autoRestart = false)
             {
-                Manager.Dispose();
+                Name = name;
+                Loop = loop;
+                Interval = interval;
+                AutoRestart = autoRestart;
+            }
+
+            public void Start(CoroutineManager coroutineManager)
+            {
+                if (_manager != null)
+                    throw new InvalidOperationException("already started");
+                if (coroutineManager?._unityHost == null)
+                    throw new ObjectDisposedException(nameof(CoroutineManager));
+                _manager = coroutineManager;
+                var enumerator = CreateEnumerator();
+                _coroutine = _manager._unityHost.StartCoroutine(enumerator);
+                Debug.Log($"{nameof(Coroutine)}.{nameof(Start)}({Name})");
+                _manager._coroutines.Add(this);
+            }
+
+            private IEnumerator CreateEnumerator()
+            {
+                while (true)
+                {
+                    if (Suspended)
+                        yield return null;
+                    try
+                    {
+                        Loop();
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        Debug.Log($"Coroutine finished: {Name}");
+                        _manager._coroutines.Remove(this);
+                        yield break;
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log($"Coroutine crashed{(AutoRestart ? ", restarting" : "")}: {Name} {e}");
+                        if (!AutoRestart)
+                        {
+                            _manager._coroutines.Remove(this);
+                            yield break;
+                        }
+                    }
+                    if (Interval != null)
+                        yield return new UnityEngine.WaitForSeconds((float) Interval.Value.TotalSeconds);
+                    else
+                        yield return null;
+                }
+            }
+            
+            public void Stop()
+            {
+                Debug.Log($"{nameof(Coroutine)}.{nameof(Stop)}({Name})");
+                if (_manager._unityHost == null)
+                    return; // Unity is already shutting down anyway
+                if (!IsRunning())
+                    Debug.Log($"Coroutine {Name} cannot be stopped as its not running");
+                _manager._coroutines.Remove(this);
+                _manager._unityHost.StopCoroutine(_coroutine);
+            }
+
+            public bool IsRunning()
+            {
+                return _manager._coroutines.Contains(this);
+            }
+
+            public void Dispose()
+            {
+                if (IsRunning())
+                    Stop();
             }
         }
 
@@ -27,91 +117,17 @@ namespace org.kharynic
         {
             _unityHost = new UnityEngine.GameObject(nameof(CoroutineManager))
                 .AddComponent<CoroutineManagerUnityHost>();
-            _unityHost.Manager = this;
             Debug.Log($"{nameof(CoroutineManager)}.{nameof(Start)}");
-        }
-
-        private IEnumerator CreateEnumerator(
-            Action loop, 
-            TimeSpan? interval, 
-            string id,
-            bool autoRestart)
-        {
-            while (true)
-            {
-                try
-                {
-                    loop();
-                }
-                catch (TaskCanceledException)
-                {
-                    Debug.Log($"Coroutine finished: {id}");
-                    _coroutines.Remove(id);
-                    yield break;
-                }
-                catch (Exception e)
-                {
-                    Debug.Log($"Coroutine crashed{(autoRestart ? ", restarting" : "")}: {id} {e}");
-                    if (!autoRestart)
-                    {
-                        _coroutines.Remove(id);
-                        yield break;
-                    }
-                }
-                if (interval != null)
-                    yield return new UnityEngine.WaitForSeconds((float) interval.Value.TotalSeconds);
-                else
-                    yield return null;
-            }
-        }
-        
-        public string StartCoroutine(
-            Action loop, 
-            [CanBeNull] string name = null,
-            TimeSpan? interval = null,
-            bool autoRestart = false,
-            [CallerFilePath] string callerFilePath = "/anonymous.")
-        {
-            if (name != null && _coroutines.ContainsKey(name))
-                throw new ArgumentException("already exists", nameof(name));
-            if (_unityHost == null)
-                throw new ObjectDisposedException(nameof(CoroutineManager));
-            var nameStart = callerFilePath.LastIndexOfAny(new[] {'/', '\\'}) + 1;
-            var nameLength = callerFilePath.LastIndexOf('.') - nameStart;
-            var id = name ?? $"{_nextId}.{callerFilePath.Substring(nameStart, nameLength)}";
-            _nextId += 1;
-            var enumerator = CreateEnumerator(loop, interval, id, autoRestart);
-            var coroutine = _unityHost.StartCoroutine(enumerator);
-            Debug.Log($"{nameof(CoroutineManager)}.{nameof(StartCoroutine)}({id})");
-            _coroutines[id] = coroutine;
-            return id;
-        }
-
-        public bool IsRunning(string id)
-        {
-            return _coroutines.ContainsKey(id);
-        }
-
-        public void StopCoroutine(string id)
-        {
-            Debug.Log($"{nameof(CoroutineManager)}.{nameof(StopCoroutine)}({id})");
-            if (_unityHost == null)
-                throw new ObjectDisposedException(nameof(CoroutineManager));
-            if (!_coroutines.ContainsKey(id))
-                Debug.Log($"Coroutine {id} cannot be stopped as its not running");
-            var coroutine = _coroutines[id];
-            _coroutines.Remove(id);
-            _unityHost.StopCoroutine(coroutine);
         }
 
         public void Dispose()
         {
             Debug.Log($"{nameof(CoroutineManager)}.{nameof(Dispose)}");
+            foreach (var coroutine in _coroutines.ToArray())
+                coroutine.Stop();
             if (_unityHost != null)
             {
                 // haven't been destroyed before this object
-                foreach (var coroutine in _coroutines.Keys.ToArray())
-                    StopCoroutine(coroutine);
                 UnityEngine.Object.Destroy(_unityHost?.gameObject);
             }
         }
