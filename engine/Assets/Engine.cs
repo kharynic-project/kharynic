@@ -28,7 +28,7 @@ namespace org.kharynic
 			RegisterExternals();
 			CoroutineManager.Start();
 			Scripts.OnLoad();
-			GraphicsSettings.MonitorFramerate(TimeSpan.FromSeconds(2));
+			GraphicsSettings.MonitorFramerate(TimeSpan.FromSeconds(10));
 		}
 
 		public void Dispose()
