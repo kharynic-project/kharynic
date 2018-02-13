@@ -10,7 +10,7 @@ namespace org.kharynic
 	{
 		public static Engine Instance { get; } = new Engine();
 		public TimeSpan RunningTime => DateTime.Now - _startupTime;
-		public CoroutineManager CoroutineManager { get; }
+		private CoroutineManager CoroutineManager { get; }
 		private DateTime _startupTime;
 
 		private Engine()
@@ -36,6 +36,17 @@ namespace org.kharynic
 			Debug.Log($"{nameof(Engine)}.{nameof(Dispose)}");
 			CoroutineManager.Dispose();
 			Debug.Log("engine shutdown");
+		}
+		
+		public CoroutineManager.Coroutine StartCoroutine(
+			Action loop,
+			string name,
+			TimeSpan? interval = null,
+			bool autoRestart = false)
+		{
+			var coroutine = new CoroutineManager.Coroutine(loop, name, interval, autoRestart);
+			coroutine.Start(CoroutineManager);
+			return coroutine;
 		}
 
 		private static void LogBuildInfo()

@@ -12,17 +12,6 @@ namespace org.kharynic
 
         private class CoroutineManagerUnityHost : UnityEngine.MonoBehaviour { }
 
-        public Coroutine StartCoroutine(
-            Action loop,
-            string name,
-            TimeSpan? interval = null,
-            bool autoRestart = false)
-        {
-            var coroutine = new Coroutine(loop, name, interval, autoRestart);
-            coroutine.Start(this);
-            return coroutine;
-        }
-
         public class Coroutine : IDisposable
         {
             public string Name { get; }

@@ -25,7 +25,7 @@ namespace org.kharynic
         {
             var lastFrameCount = 0;
             var lastTotalTime = 0f;
-            Engine.Instance.CoroutineManager.StartCoroutine(() =>
+            Engine.Instance.StartCoroutine(() =>
             {
                 var frameCount = Time.frameCount;
                 var totalTime = Time.realtimeSinceStartup;
