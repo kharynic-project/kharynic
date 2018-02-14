@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 namespace org.kharynic.Editor
 {
-    public class GeneratorUtils
+    public static class GeneratorUtils
     {
         public static string GetHeaderComment()
         {
@@ -20,8 +19,13 @@ namespace org.kharynic.Editor
             // editor has to use stubs from repository instead or build won't start
             if (protectEditor)
                 code = "#if !UNITY_EDITOR\n\n" + code + "\n#endif\n";
-            File.WriteAllText(Application.dataPath + "/" + path, code);
-            AssetDatabase.Refresh();
+            File.WriteAllText(UnityEngine.Application.dataPath + "/" + path, code);
+            UnityEditor.AssetDatabase.Refresh();
+        }
+
+        public static string ReadFile(string path)
+        {
+            return File.ReadAllText(Path.Combine(Application.dataPath, path));
         }
     }
 }

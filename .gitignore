@@ -21,6 +21,7 @@ engine/Assembly-CSharp-Editor.csproj
 engine/Assembly-CSharp-Editor-firstpass.csproj
 engine/engine.sln
 *.generated.cs
+*.generated.jslib
 
 engine/.vscode
 engine/.idea
