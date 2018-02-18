@@ -5,24 +5,24 @@ window.WebHost.Scripts =
 {
     Externals: {},
 
-    OnLoad: function () 
+    OnLoad: function () /*: void*/
     {
         window.WebHost.OnLoad();
         window.Engine.Init(window.WebHost.Player.Module, this.Externals);
         window.WebHost.HideSplash();
     },
 
-    Execute: function (code /*: string*/) 
+    Execute: function (code /*: string*/) /*: void*/
     {
         window.eval(code);
     },
     
-    Log: function (message /*: string*/) 
+    Log: function (message /*: string*/) /*: void*/
     {
         window.console.log(message); 
     },
 
-    RegisterExternal: function(name /*: string*/, functionPtr /*: IntPtr*/) 
+    RegisterExternal: function(name /*: string*/, functionPtr /*: IntPtr*/) /*: void*/
     {
         window.WebHost.Scripts.Externals[name] = functionPtr;
     },
