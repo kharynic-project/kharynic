@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using org.kharynic.unity;
 
 namespace org.kharynic
 {
@@ -12,6 +13,7 @@ namespace org.kharynic
 		public TimeSpan RunningTime => DateTime.Now - _startupTime;
 		private CoroutineManager CoroutineManager { get; }
 		private DateTime _startupTime;
+		public bool DebugMode { get; set; } = true;
 
 		private Engine()
 		{
@@ -28,7 +30,6 @@ namespace org.kharynic
 			RegisterExternals();
 			CoroutineManager.Start();
 			Scripts.OnLoad();
-			GraphicsSettings.MonitorFramerate(TimeSpan.FromSeconds(10));
 		}
 
 		public void Dispose()

@@ -1,7 +1,8 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Rendering;
 
-namespace org.kharynic
+namespace org.kharynic.unity
 {
     public static class GraphicsSettings
     {
@@ -17,11 +18,36 @@ namespace org.kharynic
             QualitySettings.shadows = high ? ShadowQuality.All : ShadowQuality.HardOnly;
             QualitySettings.shadowResolution = high ? ShadowResolution.High : ShadowResolution.Low;
             QualitySettings.shadowCascades = high ? 4 : 1;
-            QualitySettings.shadowDistance = high ? 30 : 10;
+            QualitySettings.shadowDistance = high ? 100 : 50;
             QualitySettings.antiAliasing = high ? 2 : 0;
+            foreach (var light in UnityEngine.Object.FindObjectsOfType<Light>())
+            {
+                light.shadows = high ? LightShadows.Soft : LightShadows.Hard;
+            }
+        }
+
+        public static void Init()
+        {
+            SetGraphicSettings(high: false);
+            DisableAmbientLighting();
+            MonitorFramerate(TimeSpan.FromSeconds(10));
         }
         
-        public static void MonitorFramerate(TimeSpan interval)
+        
+
+        private static void DisableAmbientLighting()
+        {
+//            RenderSettings.fog = true;
+//            RenderSettings.fogColor = Color.black;
+//            RenderSettings.fogMode = FogMode.ExponentialSquared;
+//            RenderSettings.fogDensity = 0.02f;
+            RenderSettings.ambientIntensity = 0;
+            RenderSettings.reflectionIntensity = 0;
+            RenderSettings.ambientMode = AmbientMode.Flat;
+            RenderSettings.ambientLight = Color.black;
+        }
+        
+        private static void MonitorFramerate(TimeSpan interval)
         {
             var lastFrameCount = 0;
             var lastTotalTime = 0f;
