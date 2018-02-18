@@ -23,11 +23,12 @@ namespace org.kharynic
 		public void Main(string[] args)
 		{
 			LogBuildInfo();
-			if (args.Length > 0)
+			if (args.Any(a => !string.IsNullOrWhiteSpace(a)))
 				Debug.Log($"args: {string.Join(" ", args)}");
 			RegisterExternals();
 			CoroutineManager.Start();
 			Scripts.OnLoad();
+			Debug.Log($"loading game from {Scripts.GetRootUrl()}");
 		}
 
 		public void Dispose()

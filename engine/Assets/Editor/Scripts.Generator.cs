@@ -105,10 +105,10 @@ namespace org.kharynic.Editor
                 code.Append(String.Join("\n\n", functions.Select(function =>
                 {
                     var parameters = string.Join(", ", function.Params.Select(p => $"{p.Value} {p.Key}"));
-                    var returnStatement = function.Type != "void" ? $"return default({function.Type}); " : "";
+                    var returnStatement = function.Type != "void" ? $" return default({function.Type});" : "";
                     return
                         $"        public static {function.Type} {function.Name}({parameters}) " +
-                        $"{{ {returnStatement}Debug.Log(\"{nameof(kharynic.Scripts)}.{function.Name}: unsupported platform\"); }}";
+                        $"{{ Debug.Log(\"{nameof(kharynic.Scripts)}.{function.Name}: unsupported platform\");{returnStatement} }}";
                 })));
                 code.Append(
                     $"\n    }}\n" +

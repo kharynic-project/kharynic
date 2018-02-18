@@ -26,5 +26,11 @@ window.WebHost.Scripts =
     {
         window.WebHost.Scripts.Externals[name] = functionPtr;
     },
+
+    GetRootUrl: function() /*: string*/
+    {
+        return document.location.href.replace(/\/(index.html)?$/i, "");
+    }
 };
+
 console.log("Scripts.js loaded");
