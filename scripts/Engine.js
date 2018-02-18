@@ -3,11 +3,13 @@ window.Engine = window.Engine || {};
 window.Engine.emscriptenModule = undefined;
 window.Engine.externals = undefined;
 window.Engine.dynCall = undefined;
+window.Engine.GetStringFromPtr = undefined;
 
 window.Engine.Init = function(emscriptenModule, externals) {
     this.emscriptenModule = emscriptenModule;
     this.externals = externals;
     this.dynCall = emscriptenModule.Runtime.dynCall;
+    this.GetStringFromPtr = emscriptenModule.UTF8ToString;
 };
 
 window.Engine.GetPtrFromString = function (str) 

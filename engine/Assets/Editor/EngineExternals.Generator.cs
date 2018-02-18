@@ -109,7 +109,6 @@ namespace org.kharynic.Editor
                     var paramTypeSymbols = @params.Select(p => DyncallSigTypeSymbols[p.ParameterType]);
                     var sig = returnTypeSymbol + string.Join("", paramTypeSymbols);
                     var paramNames = @params.Select(p => p.Name);
-                    var returnStatement = method.ReturnType != typeof(void) ? "return " : "";
                     code.Append(
                         $"{@namespace}.{method.Name} = function({string.Join(", ", paramDeclarations)}) /*: {method.ReturnType.Name}*/\n" +
                         "{\n");
@@ -119,8 +118,12 @@ namespace org.kharynic.Editor
                         $"    var sig = \"{sig}\";\n" +
                         $"    var ptr = this.externals.{method.Name};\n" +
                         $"    var args = [ {string.Join(",", paramNames)} ];\n" + 
-                        $"    {returnStatement}this.dynCall(sig, ptr, args);\n" + 
-                        "}\n\n");
+                        $"    var result = this.dynCall(sig, ptr, args);\n");
+                    if (method.ReturnType == typeof(string))
+                        code.Append("    return this.GetStringFromPtr(result);\n");
+                    else if (method.ReturnType != typeof(void))
+                        code.Append("    return result;\n");
+                    code.Append("}\n\n");
                 }
 
                 var filename = $"{nameof(Engine)}.generated.js";

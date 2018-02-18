@@ -3,7 +3,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using org.kharynic.unity;
 
 namespace org.kharynic
 {
@@ -24,7 +23,6 @@ namespace org.kharynic
 		public void Main(string[] args)
 		{
 			LogBuildInfo();
-			Debug.LogEngineObjects();
 			if (args.Length > 0)
 				Debug.Log($"args: {string.Join(" ", args)}");
 			RegisterExternals();

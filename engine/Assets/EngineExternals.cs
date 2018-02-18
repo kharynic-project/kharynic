@@ -13,6 +13,11 @@
      */
     public static partial class EngineExternals
     {
+        public static string GetVersion()
+        {
+            return BuildInfo.Version;
+        }
+        
         public static void Hello(string message)
         {
             Debug.Log($"EngineExternals.Hello({message})");
