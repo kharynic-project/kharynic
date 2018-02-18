@@ -37,6 +37,7 @@ window.WebHost = {
             WebHost.PlayerFrame.contentWindow.WebHost = WebHost;
             WebHost.GameContainer = WebHost.PlayerFrame.contentDocument.getElementById("gameContainer");
         }
+        this.PlayerFrame.style.opacity = 0;
         this.Host.appendChild(this.PlayerFrame);
     },
     RequestFullscreen: function () {
@@ -66,12 +67,24 @@ window.WebHost = {
         this.LoadScript("Engine.js");
         this.LoadScript("Engine.generated.js");
     },
+    ShowWatermark: function() {
+        var watermark = document.createElement("div");
+        watermark.id = "watermark";
+        watermark.textContent = "github.com/kharynic-project\nDeveloper preview - not playable yet";
+        this.Host.appendChild(watermark);
+        var engineVersionUrl = "../engine/Assets/Editor/BuildInfo.Version.txt";
+        fetch(engineVersionUrl).then(function(response) {
+            response.text().then(function(version) {
+                watermark.textContent = "Kharynic Engine v" + version + "\n" + watermark.textContent;
+            })
+        });
+    },
     Init: function(host) {
         this.Host = host;
         this.ShowSplash();
+        this.ShowWatermark();
         this.LoadScripts();
         this.CreatePlayer();
-        this.PlayerFrame.style.opacity = 0;
         try { window.screen.orientation.lock('landscape').catch(function() { }); } catch(e) {}
         this.Host.addEventListener("click", this.RequestFullscreen);
     },

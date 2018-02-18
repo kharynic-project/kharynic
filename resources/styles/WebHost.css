@@ -24,3 +24,17 @@ body {
     -ms-user-select: none;
     user-select: none;
 }
+
+#watermark {
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+    z-index: 9999;
+    color: white;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: right;
+    font-size: small;
+    opacity: 0.2;
+    white-space: pre;
+}
