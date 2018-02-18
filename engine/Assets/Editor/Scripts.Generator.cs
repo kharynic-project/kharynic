@@ -134,11 +134,28 @@ namespace org.kharynic.Editor
                             f.Params[paramName] == "string" ? 
                                 $"Pointer_stringify({paramName})" : 
                                 paramName));
-                    var returnStatement = f.Type != "void" ? "return " : "";
+                    var call = $"{scriptHostObject}.{f.Name}({args})";
+                    string body;
+                    if (string.Equals(f.Type, "Void", StringComparison.InvariantCultureIgnoreCase))
+                        body = 
+                            $"        {call};";
+                    else if (string.Equals(f.Type, "String", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        body = 
+                            $"        var result = {call};\n" +
+                            $"        var bufferSize = lengthBytesUTF8(result) + 1;\n" +
+                            $"        var buffer = _malloc(bufferSize);\n" +
+                            $"        stringToUTF8(result, buffer, bufferSize);\n" +
+                            $"        return buffer;";
+                    }
+                    else
+                        body = 
+                            $"        return {call};";
+                    
                     return
                         $"    {f.Name}: function({string.Join(", ", f.Params.Keys)})\n" +
-                        $"    {{\n" +
-                        $"        {returnStatement}{scriptHostObject}.{f.Name}({args});\n" +
+                        $"    {{\n" + 
+                        body + "\n" +
                         $"    }}";
                 })));
                 code.Append("\n});\n");
