@@ -15,16 +15,22 @@ namespace org.kharynic.Editor
         {
             public int callbackOrder => 2;
             
-            public void OnPreprocessBuild(BuildTarget target, string path)
+            [MenuItem("Kharynic/Generate externals")]
+            public static void Run()
             {
                 var methods = typeof(kharynic.EngineExternals)
                     .GetMethods(BindingFlags.Public | BindingFlags.Static);
                 GeneratePInvokeMethodWrappers(methods);
                 GenerateScriptWrappers(methods);
-                Debug.Log($"{GetType().FullName} finished");
+                Debug.Log($"{typeof(Generator).FullName} finished");
+            }
+            
+            public void OnPreprocessBuild(BuildTarget target, string path)
+            {
+                Run();
             }
 
-            private void GeneratePInvokeMethodWrappers(IEnumerable<MethodInfo> methods)
+            private static void GeneratePInvokeMethodWrappers(IEnumerable<MethodInfo> methods)
             {
                 var code = new StringBuilder(
                     "using System;\n\n" +
@@ -89,7 +95,7 @@ namespace org.kharynic.Editor
                 { typeof(string), "i" } // is replaced by IntPtr and later by int
             };
 
-            private void GenerateScriptWrappers(IEnumerable<MethodInfo> methods)
+            private static void GenerateScriptWrappers(IEnumerable<MethodInfo> methods)
             {
                 var @namespace = $"window.{nameof(Engine)}";
                 var code = new StringBuilder(

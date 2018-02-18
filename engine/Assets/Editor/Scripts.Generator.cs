@@ -22,13 +22,20 @@ namespace org.kharynic.Editor
                 public string Type;
                 public Dictionary<string, string> Params; // Name, Type
             }
-            
-            public void OnPreprocessBuild(BuildTarget target, string path)
+
+            [MenuItem("Kharynic/Generate script imports")]
+            public static void Run()
             {
                 var functions = ParseScriptInterfaceDefinition();
                 GenerateEmscriptenLib(functions);
                 GenerateExternImportStubs(functions);
                 GenerateEditorPreviewStubs(functions);
+                Debug.Log($"{typeof(Generator).FullName} finished");
+            }
+            
+            public void OnPreprocessBuild(BuildTarget target, string path)
+            {
+                Run();
             }
 
             private static Function[] ParseScriptInterfaceDefinition()
@@ -60,7 +67,7 @@ namespace org.kharynic.Editor
                 return functions;
             }
 
-            private void GenerateExternImportStubs(IEnumerable<Function> functions)
+            private static void GenerateExternImportStubs(IEnumerable<Function> functions)
             {
                 var code = new StringBuilder(
                     $"using {typeof(IntPtr).Namespace};\n" +
@@ -83,7 +90,7 @@ namespace org.kharynic.Editor
                 GeneratorUtils.WriteFile(code.ToString(), "Scripts.generated.cs");
             }
 
-            private void GenerateEditorPreviewStubs(IEnumerable<Function> functions)
+            private static void GenerateEditorPreviewStubs(IEnumerable<Function> functions)
             {
                 var code = new StringBuilder(
                     $"#if UNITY_EDITOR\n\n" + 
@@ -110,7 +117,7 @@ namespace org.kharynic.Editor
                 GeneratorUtils.WriteFile(code.ToString(), "Scripts.preview.cs", protectEditor: false);
             }
 
-            private string GetScriptHostObject()
+            private static string GetScriptHostObject()
             {
                 var lineSeparators = new[] {'\n', '\r'};
                 var scriptLines = GeneratorUtils.ReadFile(ScriptInterfaceDefinitionPath)
@@ -120,7 +127,7 @@ namespace org.kharynic.Editor
                 return objectDeclarationRegexp.Match(declarationLine).Groups["object"].Value;
             }
 
-            private void GenerateEmscriptenLib(IEnumerable<Function> functions)
+            private static void GenerateEmscriptenLib(IEnumerable<Function> functions)
             {
                 var scriptHostObject = GetScriptHostObject();
                 var code = new StringBuilder(
