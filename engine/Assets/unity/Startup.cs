@@ -55,8 +55,8 @@ namespace org.kharynic.unity
                 lightHost.transform.localPosition = new Vector3 {y = -1f, z = -1f};
                 var light = lightHost.AddComponent<Light>();
                 light.type = LightType.Spot;
-                light.range = 100f;
-                light.spotAngle = 90f;
+                light.range = 130f;
+                light.spotAngle = 110f;
                 light.renderMode = LightRenderMode.ForcePixel;
                 light.shadows = LightShadows.Hard;
             }
