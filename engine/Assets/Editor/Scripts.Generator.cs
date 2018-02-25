@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using org.kharynic.Scripting;
 using UnityEditor;
 using UnityEditor.Build;
 
