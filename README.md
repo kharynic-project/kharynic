@@ -15,5 +15,6 @@ Story takes place in remote fortress in the mountains. Once it served as high se
 
 # Status
 ![screenshot from 2018.02.24](docs/screenshots/2018.02.24.jpg)
+
 Project is in very early stage. There is a preview build available on the website with free camera and basic location mesh, that can be linked to desktop and run in separate window on platforms with Web App standard.
 Currently scripting (C# - JS interop) and game editing system (script and map editor) is being developed. Efforts are focused on making further development easier for people with no expierience in software development. Roadmap can be found in [docs/roadmap.md](docs/roadmap.md).
