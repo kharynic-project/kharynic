@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.InteropServices;
+using org.kharynic.Scripting;
 
 namespace org.kharynic
 {
@@ -13,11 +11,13 @@ namespace org.kharynic
 		private CoroutineManager CoroutineManager { get; }
 		private DateTime _startupTime;
 		public bool DebugMode { get; set; } = true;
+		private ScriptingInterface _scriptingInterface;
 
 		private Engine()
 		{
 			CoroutineManager = new CoroutineManager();
 			_startupTime = DateTime.Now;
+			_scriptingInterface = new ScriptingInterface(this);
 		}
 
 		public void Main(string[] args)
@@ -25,10 +25,10 @@ namespace org.kharynic
 			LogBuildInfo();
 			if (args.Any(a => !string.IsNullOrWhiteSpace(a)))
 				Debug.Log($"args: {string.Join(" ", args)}");
-			RegisterExternals();
 			CoroutineManager.Start();
-			Scripts.OnLoad();
 			Debug.Log($"loading game from {Scripts.GetRootUrl()}");
+			Runtime.RegisterAll(GetType().Assembly);
+			Scripts.OnLoad();
 		}
 
 		public void Dispose()
@@ -58,21 +58,11 @@ namespace org.kharynic
 				$"*** built with {BuildInfo.Toolset} for {BuildInfo.Platform}+{BuildInfo.Runtime}+{BuildInfo.TranspilationTarget}\n" +
 				$"*** from: {BuildInfo.LocalProjectPath} by {BuildInfo.User}");
 		}
-		
-		private void RegisterExternals()
+        
+		[Scriptable]
+		public string GetVersion()
 		{
-			var wrappers = typeof(EngineExternals.Wrappers).GetMethods(BindingFlags.Public | BindingFlags.Static);
-			foreach (var wrapper in wrappers)
-				RegisterExternal(wrapper);
-		}
-
-		private void RegisterExternal(MethodInfo method)
-		{
-			var delegateType = method.DeclaringType?.GetNestedType($"{method.Name}{nameof(Delegate)}");
-			Debug.Assert(delegateType != null);
-			var @delegate = Delegate.CreateDelegate(delegateType, method);
-			var delegateFunctionPtr = Marshal.GetFunctionPointerForDelegate(@delegate);
-			Scripts.RegisterExternal(method.Name, delegateFunctionPtr);
+			return BuildInfo.Version;
 		}
 	}
 }

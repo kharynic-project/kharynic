@@ -4,7 +4,7 @@ using System;
 
 namespace org.kharynic
 {
-    // generated on 2018.02.18 23:35 by org.kharynic.Editor.Scripts+Generator.GenerateEditorPreviewStubs
+    // generated on 2018.02.25 22:32 by /engine/Assets/Editor/Scripts.Generator.cs
     // this file is used by editor preview which cannot regenerate it, so it has to be commited
     public static class Scripts
     {

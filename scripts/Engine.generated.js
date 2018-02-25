@@ -1,38 +1,29 @@
-// generated on 2018.02.18 21:27 by org.kharynic.Editor.EngineExternals+Generator.GenerateScriptWrappers
+// generated on 2018.02.25 22:32 by /engine/Assets/Scripting/Generator.cs
 // this file is used by scripts which cannot regenerate it, so it has to be commited
 
 // *********************
 //       Externals
-//  Phoenix V0.0.76+529
+//  Phoenix V0.0.79+943
 // *********************
 
-window.Engine = window.Engine || {};
 
-window.Engine.GetVersion = function() /*: String*/
+org = org || {};
+org.kharynic = org.kharynic || {};
+
+org.kharynic.Engine = class
 {
-    var sig = "i";
-    var ptr = this.externals.GetVersion;
-    var args = [  ];
-    var result = this.dynCall(sig, ptr, args);
-    return this.GetStringFromPtr(result);
-}
+    constructor(thisPtr /*: IntPtr*/)
+    {
+        this.thisPtr = thisPtr;
+    }
 
-window.Engine.Hello = function(message /*: String*/) /*: Void*/
-{
-    message = this.GetPtrFromString(message);
-    var sig = "vi";
-    var ptr = this.externals.Hello;
-    var args = [ message ];
-    var result = this.dynCall(sig, ptr, args);
+    GetVersion() /*: System.String*/
+    {
+        var sig = "i";
+        var ptr = this.constructor.GetVersionPtr;
+        var args = [  ];
+        var result = org.kharynic.Scripting.Runtime.DynCall(sig, ptr, args);
+        result = org.kharynic.Scripting.Runtime.GetStringFromPtr(result);
+        return result;
+    }
 }
-
-window.Engine.Add = function(a /*: Int32*/, b /*: Int32*/) /*: Int32*/
-{
-    var sig = "iii";
-    var ptr = this.externals.Add;
-    var args = [ a,b ];
-    var result = this.dynCall(sig, ptr, args);
-    return result;
-}
-
-console.log("Engine.generated.js loaded");
