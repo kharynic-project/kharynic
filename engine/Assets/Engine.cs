@@ -68,12 +68,8 @@ namespace org.kharynic
 
 		private void RegisterExternal(MethodInfo method)
 		{
-			var paramTypes = method.GetParameters().Select(p => p.ParameterType);
-			Type delegateType;
-			if (method.ReturnType == (typeof(void)))
-				delegateType = Expression.GetActionType(paramTypes.ToArray());
-			else
-				delegateType = Expression.GetFuncType(paramTypes.Concat(new[] {method.ReturnType}).ToArray());
+			var delegateType = method.DeclaringType?.GetNestedType($"{method.Name}{nameof(Delegate)}");
+			Debug.Assert(delegateType != null);
 			var @delegate = Delegate.CreateDelegate(delegateType, method);
 			var delegateFunctionPtr = Marshal.GetFunctionPointerForDelegate(@delegate);
 			Scripts.RegisterExternal(method.Name, delegateFunctionPtr);
