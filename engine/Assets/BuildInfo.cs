@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+using System.IO;
 using System.Runtime.CompilerServices;
+#if !UNITY_EDITOR
+    using System.Linq;
+#endif
 
 namespace org.kharynic
 {
@@ -34,23 +35,27 @@ namespace org.kharynic
                 false
             #endif
         ;
+        public static string LocalProjectPath
+        {
+            get
+            {
+                const string engineAssetsPathSegment = "/engine/assets";
+                return Until(GetSourceFilePath().Replace(Path.PathSeparator, '/'), engineAssetsPathSegment) ??
+                       Until(LocalAssetsPath, engineAssetsPathSegment);
+            }
+        }
+        public static readonly string RootNamespace = typeof(Engine).Namespace;
+
+        
+        
+        // trick using CompilerServices that works with IL2CPP+WebAssembly (while stacktraces not)
+        private static string GetSourceFilePath ([CallerFilePath] string path = null) => path;
+        
         private static string Until(string a, string b)
         {
             var length = a.ToLowerInvariant()
                 .IndexOf(b, StringComparison.Ordinal);
             return length > 0 ? a.Substring(0, length) : null;
         }
-        public static string LocalProjectPath
-        {
-            get
-            {
-                const string engineAssetsPathSegment = "/engine/assets";
-                return Until(GetSourceFilePath().Replace('\\', '/'), engineAssetsPathSegment) ??
-                       Until(LocalAssetsPath, engineAssetsPathSegment);
-            }
-        }
-
-        // trick using CompilerServices that works with IL2CPP+WebAssembly (while stacktraces not)
-        private static string GetSourceFilePath ([CallerFilePath] string path = null) => path;
     }
 }

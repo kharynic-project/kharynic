@@ -1,4 +1,7 @@
-﻿namespace org.kharynic
+﻿using System;
+using org.kharynic.Scripting;
+
+namespace org.kharynic
 {
     /*
      * org.kharynic.Editor.EngineExternals.Generator generates nested Wrappers
@@ -11,22 +14,32 @@
      * Calling these functions requires separate JS-side wrappers using
      * WebHost.Player.Module.Runtime.dynCall.
      */
-    public static partial class EngineExternals
+    public class ScriptingInterface
     {
-        public static string GetVersion()
+        private readonly Engine _engine;
+
+        public ScriptingInterface(Engine engine)
         {
-            return BuildInfo.Version;
+            _engine = engine;
         }
         
+        [Scriptable]
         public static void Hello(string message)
         {
-            Debug.Log($"EngineExternals.Hello({message})");
+            Debug.Log($"ScriptingInterface.Hello({message})");
         }
         
+        [Scriptable]
         public static int Add(int a, int b)
         {
-            Debug.Log($"EngineExternals.Add({a}, {b})");
+            Debug.Log($"ScriptingInterface.Add({a}, {b})");
             return a + b;
+        }
+        
+        [Scriptable]
+        public static IntPtr GetEngine()
+        {
+            return Runtime.GetPointer(Engine.Instance);
         }
     }
 }
