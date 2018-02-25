@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 
 namespace org.kharynic
 {
@@ -56,6 +58,24 @@ namespace org.kharynic
                 .Select(o => getFullObjectName(o))
                 .ToArray();
             Log($"{engineObjects.Length} engine objects found: \n{string.Join("\n", engineObjects)}");
+        }
+
+        [AssertionMethod]
+        [Conditional("DEBUG")]
+        public static void Assert(
+            bool condition, 
+            string message = null,
+            [CallerFilePath] string callerFilePath = "unknown.cs",
+            [CallerLineNumber] int callerLineNumber = -1)
+        {
+            if (!condition)
+            {
+                message = $"ERROR: assertion failed: {message}";
+                Log(message, callerFilePath, callerLineNumber);
+                #if UNITY_EDITOR
+                    UnityEngine.Debug.Break();
+                #endif
+            }
         }
     }
 }
