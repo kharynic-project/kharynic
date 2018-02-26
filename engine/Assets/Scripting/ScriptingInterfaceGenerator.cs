@@ -5,35 +5,37 @@ using System.Reflection;
 
 namespace org.kharynic.Scripting
 {
-    public static class Generator
+    public static class ScriptingInterfaceGenerator
     {
+        // omit assembly to search trough all loaded ones (may be slow)
         public static void GenerateAllInterfaces(Assembly assembly = null, string scriptHeader = null)
         {
-            var scriptingInterfaces = GetDeclaringTypes(assembly);
+            var scriptableTypes = GetScriptableTypes(assembly);
             var scriptPaths = new List<string>();
-            foreach (var type in scriptingInterfaces)
+            var rootNamespace = BuildInfo.RootNamespace;
+            foreach (var type in scriptableTypes)
             {
-                var cSharpLayerGenerator = new CSharpLayerGenerator(type, BuildInfo.RootNamespace);
-                var scriptLayerGenerator = new ScriptLayerGenerator(type, BuildInfo.RootNamespace, scriptHeader);
+                var cSharpLayerGenerator = new CSharpLayerGenerator(type, rootNamespace);
+                var scriptLayerGenerator = new ScriptLayerGenerator(type, rootNamespace, scriptHeader);
                 cSharpLayerGenerator.Run();
                 scriptLayerGenerator.Run();
                 scriptPaths.Add(scriptLayerGenerator.Path);
                 Debug.Log($"{type.FullName} generated");
             }
-            GenerateFileList(scriptPaths);
+            GenerateScriptFileList(scriptPaths);
         }
 
-        private static void GenerateFileList(IEnumerable<string> paths)
+        private static void GenerateScriptFileList(IEnumerable<string> paths)
         {
-            var list = string.Join("\n", paths) + "\n";
+            var list = 
+                GeneratorUtils.GetHeaderComment() + "\n" +
+                string.Join("\n", paths) + "\n";
             const string path = "../../scripts/filelist.generated.txt";
             GeneratorUtils.WriteFile(list, path, protectEditor: false);
         }
 
-
-        
         // finds types this needs to be ran on
-        private static IEnumerable<Type> GetDeclaringTypes(Assembly assembly)
+        private static IEnumerable<Type> GetScriptableTypes(Assembly assembly)
         {
             var assemblies = assembly != null ? new[] {assembly} : AppDomain.CurrentDomain.GetAssemblies();
             return assemblies
