@@ -15,15 +15,9 @@ namespace org.kharynic.Editor
                 $"//       Externals\n" +
                 $"//  Phoenix V{kharynic.BuildInfo.Version}\n" +
                 $"// *********************\n\n";
-            
-            var scriptingInterfaces =  Generator.GetDeclaringTypes(typeof(ScriptingInterface).Assembly);
-            foreach (var type in scriptingInterfaces)
-            {
-                var generator = new Generator(type, kharynic.BuildInfo.RootNamespace, scriptHeader);
-                generator.Run();
-                Debug.Log($"{generator.GetType().Name} : {type.Name} finished");
-            }
+            Generator.GenerateAllInterfaces(typeof(ScriptingInterface).Assembly, scriptHeader);
             UnityEditor.AssetDatabase.Refresh();
+            Debug.Log($"{nameof(EcmaScriptInterfaceGeneratorAdapter)} finished");
         }
 
         public void OnPreprocessBuild(UnityEditor.BuildTarget target, string path)
