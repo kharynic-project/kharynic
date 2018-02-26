@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 
 namespace org.kharynic.Scripting
 {
@@ -14,9 +13,13 @@ namespace org.kharynic.Scripting
         private const string GeneratedInterfaceSuffix = "_generated";
 
         public CSharpLayerGenerator(Type targetType, string rootNamespace) 
-            : base(targetType, rootNamespace)
+            : base(
+                targetType, 
+                rootNamespace)
         {
         }
+
+        public override string Path => $"{base.Path}.cs";
 
         protected override string GenerateCode()
         {
@@ -34,13 +37,6 @@ namespace org.kharynic.Scripting
                 header +
                 string.Join("\n", Methods.Select(GenerateMethodWrapper)) +
                 footer;
-        }
-
-        protected override string GetPath()
-        {
-            return new Regex($"^{RootNamespace}")
-                       .Replace(TargetType.Namespace ?? "", "")
-                       .Replace(".", "/") + $"/{TargetType.Name}.generated.cs";
         }
 
         private string GenerateMethodWrapper(MethodInfo method)

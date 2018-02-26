@@ -9,7 +9,7 @@ namespace org.kharynic.Scripting
         public static string GetHeaderComment([CallerFilePath] string callerFilePath = "<unknown>")
         {
             var relativePath = callerFilePath.Replace("\\", "/").Replace(BuildInfo.LocalProjectPath, "");
-            return $"// generated on {DateTime.Now:yyyy.MM.dd HH:mm} by {relativePath}";
+            return $"// Code generated on {DateTime.Now:yyyy.MM.dd} by {relativePath} - DO NOT EDIT.";
         }
 
         public static void WriteFile(string code, string path, bool protectEditor = true)
