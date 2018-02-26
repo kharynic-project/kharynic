@@ -88,7 +88,8 @@ namespace org.kharynic.Editor
                 code.Append(
                     $"\n    }}\n" +
                     $"}}\n");
-                GeneratorUtils.WriteFile(code.ToString(), "Scripts.generated.cs");
+                var path = $"{kharynic.BuildInfo.RelativeEngineAssetsPath}/Scripts.generated.cs";
+                GeneratorUtils.WriteFile(code.ToString(), path);
             }
 
             private static void GenerateEditorPreviewStubs(IEnumerable<Function> functions)
@@ -115,7 +116,8 @@ namespace org.kharynic.Editor
                     $"\n    }}\n" +
                     $"}}\n" + 
                     $"\n#endif\n");
-                GeneratorUtils.WriteFile(code.ToString(), "Scripts.preview.cs", protectEditor: false);
+                var path = $"{kharynic.BuildInfo.RelativeEngineAssetsPath}/Scripts.preview.cs";
+                GeneratorUtils.WriteFile(code.ToString(), path, protectEditor: false);
             }
 
             private static string GetScriptHostObject()
@@ -135,7 +137,7 @@ namespace org.kharynic.Editor
                     $"{GeneratorUtils.GetHeaderComment()}\n" +
                     "mergeInto(LibraryManager.library, \n" +
                     "{\n");
-                code.Append(string.Join(",\n", functions.Select(f =>
+                code.Append(string.Join(",\n\n", functions.Select(f =>
                 {
                     var args = string.Join(", ",
                         f.Params.Keys.Select(paramName => 
@@ -167,7 +169,8 @@ namespace org.kharynic.Editor
                         $"    }}";
                 })));
                 code.Append("\n});\n");
-                GeneratorUtils.WriteFile(code.ToString(), "Plugins/Scripts.generated.jslib", protectEditor: false);
+                var path = $"{kharynic.BuildInfo.RelativeEngineAssetsPath}/Plugins/Scripts.generated.jslib";
+                GeneratorUtils.WriteFile(code.ToString(), path);
             }
         }
     }

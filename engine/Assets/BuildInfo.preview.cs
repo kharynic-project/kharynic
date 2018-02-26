@@ -30,7 +30,6 @@ namespace org.kharynic
         public static readonly string TranspilationTarget = "CIL";
         public static readonly string BuildDate = DateTime.Now.ToString("MMM dd yyyy", CultureInfo.InvariantCulture);
         public static readonly string User = (Environment.UserName + "@" + Environment.UserDomainName).ToLowerInvariant();
-        public static readonly string LocalAssetsPath = Application.dataPath;
         public static string Version = GetEditorPreviewBuildVersion();
     }
 }

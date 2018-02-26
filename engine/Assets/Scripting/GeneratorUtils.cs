@@ -14,10 +14,12 @@ namespace org.kharynic.Scripting
 
         public static void WriteFile(string code, string path, bool protectEditor = true)
         {
+            if (!path.EndsWith(".cs", StringComparison.InvariantCultureIgnoreCase))
+                protectEditor = false;
             // generated code cannot be used in editor-mode, or re-generation may fail
             if (protectEditor)
                 code = "#if !UNITY_EDITOR\n\n" + code + "\n#endif\n";
-            path = (UnityEngine.Application.dataPath + "/" + path).Replace("//", "/");
+            path = (BuildInfo.LocalProjectPath + "/" + path).Replace("//", "/");
             var directoryPath = Path.GetDirectoryName(path);
             System.Diagnostics.Debug.Assert(directoryPath != null);
             Directory.CreateDirectory(directoryPath);

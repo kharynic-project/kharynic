@@ -19,7 +19,7 @@ namespace org.kharynic.Scripting
         {
         }
 
-        public override string Path => $"{base.Path}.cs";
+        public override string Path => $"{BuildInfo.RelativeEngineAssetsPath}/{base.Path}.cs";
 
         protected override string GenerateCode()
         {
