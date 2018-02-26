@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 
 namespace org.kharynic.Scripting
 {
@@ -19,15 +17,10 @@ namespace org.kharynic.Scripting
             : base(targetType, rootNamespace)
         {
             _scriptHeader = scriptHeader;
+            
         }
 
-        protected override String GetPath()
-        {
-            return "../../scripts/" +
-                   new Regex($"^{RootNamespace}")
-                       .Replace(TargetType.Namespace ?? "", "")
-                       .Replace(".", "/") + $"/{TargetType.Name}.generated.js";;
-        }
+        public override string Path => $"../../scripts/{base.Path}.js";
 
         protected override string GenerateCode()
         {

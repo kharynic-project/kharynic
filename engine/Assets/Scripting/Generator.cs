@@ -2,44 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 
 namespace org.kharynic.Scripting
 {
-    public class Generator
+    public static class Generator
     {
-        private readonly CSharpLayerGenerator _cSharpLayerGenerator;
-        private readonly ScriptLayerGenerator _scriptLayerGenerator;
-
-        public Generator(
-            Type targetType, 
-            string rootNamespace,
-            string scriptHeader = null)
-        {
-            _cSharpLayerGenerator = new CSharpLayerGenerator(targetType, rootNamespace);
-            _scriptLayerGenerator = new ScriptLayerGenerator(targetType, rootNamespace, scriptHeader);
-        }
-
-        public void Run()
-        {
-            _cSharpLayerGenerator.Run();
-            _scriptLayerGenerator.Run();
-        }
-
-        public static void GenerateAllInterfaces(Assembly assembly, string scriptHeader = null)
+        public static void GenerateAllInterfaces(Assembly assembly = null, string scriptHeader = null)
         {
             var scriptingInterfaces = GetDeclaringTypes(assembly);
+            var scriptPaths = new List<string>();
             foreach (var type in scriptingInterfaces)
             {
-                var generator = new Generator(type, BuildInfo.RootNamespace, scriptHeader);
-                generator.Run();
-                Debug.Log($"{generator.GetType().Name} : {type.Name} finished");
+                var cSharpLayerGenerator = new CSharpLayerGenerator(type, BuildInfo.RootNamespace);
+                var scriptLayerGenerator = new ScriptLayerGenerator(type, BuildInfo.RootNamespace, scriptHeader);
+                cSharpLayerGenerator.Run();
+                scriptLayerGenerator.Run();
+                scriptPaths.Add(scriptLayerGenerator.Path);
+                Debug.Log($"{type.FullName} generated");
             }
+            GenerateFileList(scriptPaths);
         }
+
+        private static void GenerateFileList(IEnumerable<string> paths)
+        {
+            var list = string.Join("\n", paths) + "\n";
+            const string path = "../../scripts/filelist.generated.txt";
+            GeneratorUtils.WriteFile(list, path, protectEditor: false);
+        }
+
+
         
         // finds types this needs to be ran on
-        private static IEnumerable<Type> GetDeclaringTypes(Assembly assembly = null)
+        private static IEnumerable<Type> GetDeclaringTypes(Assembly assembly)
         {
             var assemblies = assembly != null ? new[] {assembly} : AppDomain.CurrentDomain.GetAssemblies();
             return assemblies
