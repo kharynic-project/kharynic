@@ -35,15 +35,11 @@ namespace org.kharynic
                 false
             #endif
         ;
-        public static string LocalProjectPath
-        {
-            get
-            {
-                const string engineAssetsPathSegment = "/engine/assets";
-                return Until(GetSourceFilePath().Replace(Path.PathSeparator, '/'), engineAssetsPathSegment) ??
-                       Until(LocalAssetsPath, engineAssetsPathSegment);
-            }
-        }
+        // this cannot use Path.DirectorySeparatorChar as it may differ between build platform and runtime platform
+        public static string LocalProjectPath => 
+            Until(GetSourceFilePath().Replace('\\', '/'), RelativeEngineAssetsPath);
+
+        public static string RelativeEngineAssetsPath = "/Engine/Assets";
         public static readonly string RootNamespace = typeof(Engine).Namespace;
 
         
@@ -53,8 +49,7 @@ namespace org.kharynic
         
         private static string Until(string a, string b)
         {
-            var length = a.ToLowerInvariant()
-                .IndexOf(b, StringComparison.Ordinal);
+            var length = a.IndexOf(b, StringComparison.OrdinalIgnoreCase);
             return length > 0 ? a.Substring(0, length) : null;
         }
     }

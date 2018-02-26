@@ -19,7 +19,7 @@ namespace org.kharynic.Scripting
                 var scriptLayerGenerator = new ScriptLayerGenerator(type, rootNamespace, scriptHeader);
                 cSharpLayerGenerator.Run();
                 scriptLayerGenerator.Run();
-                scriptPaths.Add(scriptLayerGenerator.Path);
+                scriptPaths.Add(scriptLayerGenerator.Path.Replace("//", "/"));
                 Debug.Log($"{type.FullName} generated");
             }
             GenerateScriptFileList(scriptPaths);
@@ -30,7 +30,7 @@ namespace org.kharynic.Scripting
             var list = 
                 GeneratorUtils.GetHeaderComment() + "\n" +
                 string.Join("\n", paths) + "\n";
-            const string path = "../../scripts/filelist.generated.txt";
+            const string path = "scripts/filelist.generated.txt";
             GeneratorUtils.WriteFile(list, path, protectEditor: false);
         }
 

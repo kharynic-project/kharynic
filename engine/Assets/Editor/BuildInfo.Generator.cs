@@ -17,7 +17,7 @@ namespace org.kharynic.Editor
         {
             public int callbackOrder => 1;
 
-            public void OnPreprocessBuild(BuildTarget target, string path)
+            public void OnPreprocessBuild(BuildTarget target, string buildPath)
             {
                 var code = new StringBuilder(
                     $"namespace {typeof(kharynic.BuildInfo).Namespace}\n" +
@@ -30,7 +30,8 @@ namespace org.kharynic.Editor
                 code.Append(
                     "    }\n" +
                     "}\n");
-                GeneratorUtils.WriteFile(code.ToString(), $"{nameof(BuildInfo)}.generated.cs");
+                var path = $"{kharynic.BuildInfo.RelativeEngineAssetsPath}/{nameof(BuildInfo)}.generated.cs";
+                GeneratorUtils.WriteFile(code.ToString(), path);
                 Debug.Log($"{GetType().FullName} finished");
                 //TODO: explore usages of EditorUtility.CompileCSharp()
             }
@@ -61,7 +62,6 @@ namespace org.kharynic.Editor
                     {"TranspilationTarget", PlayerSettings.WebGL.useWasm ? "WebAssembly" : "JavaScript"},
                     {"BuildDate", DateTime.Now.ToString("MMM dd yyyy", CultureInfo.InvariantCulture)},
                     {"User", (Environment.UserName + "@" + Environment.UserDomainName).ToLowerInvariant()},
-                    {"LocalAssetsPath", Application.dataPath},
                     {"Version", buildNumber}
                 };
                 code.Append($"        {GeneratorUtils.GetHeaderComment()}\n");

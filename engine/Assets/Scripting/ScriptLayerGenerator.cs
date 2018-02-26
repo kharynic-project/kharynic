@@ -20,7 +20,7 @@ namespace org.kharynic.Scripting
             
         }
 
-        public override string Path => $"../../scripts/{base.Path}.js";
+        public override string Path => $"/scripts/{base.Path}.js";
 
         protected override string GenerateCode()
         {
@@ -31,22 +31,17 @@ namespace org.kharynic.Scripting
                 GetScriptNamespaceDeclarations() + "\n\n" +
                 $"{@namespace}{TargetType.Name} = class\n" +
                 $"{{\n";
-            var constructorHeader =
+            var constructor =
                 $"    constructor({ThisPtrVar} /*: {typeof(IntPtr).FullName}*/)\n" +
                 $"    {{\n" +
-                $"        this.{ThisPtrVar} = {ThisPtrVar};\n";
-            var ptrFieldsDeclarations = string.Join("", Methods.Select(m =>
-                $"        this.{m.Name}{PtrSuffix} = undefined;\n"));
-            var constructorFooter =
+                $"        this.{ThisPtrVar} = {ThisPtrVar};\n" + 
                 $"    }}\n\n";
             var footer =
                 $"}}\n";
             return
                 header +
-                constructorHeader +
-                ptrFieldsDeclarations +
-                constructorFooter +
-                string.Join("\n", Methods.Select(GenerateMethodWrapper)) + "\n" +
+                constructor +
+                string.Join("\n\n", Methods.Select(GenerateMethodWrapper)) + "\n" +
                 footer;
         }
 
