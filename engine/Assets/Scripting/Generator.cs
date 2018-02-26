@@ -101,16 +101,21 @@ namespace org.kharynic.Scripting
                 GetScriptNamespaceDeclarations() + "\n\n" +
                 $"{@namespace}{_targetType.Name} = class\n" +
                 $"{{\n";
-            var constructor =
-                $"    constructor(thisPtr /*: IntPtr*/)\n" +
+            var constructorHeader =
+                $"    constructor({ThisPtrVar} /*: {typeof(IntPtr).FullName}*/)\n" +
                 $"    {{\n" +
-                $"        this.thisPtr = thisPtr;\n" +
+                $"        this.{ThisPtrVar} = {ThisPtrVar};\n";
+            var ptrFieldsDeclarations = string.Join("", _methods.Select(m =>
+                $"        this.{m.Name}Ptr = undefined;\n"));
+            var constructorFooter =
                 $"    }}\n\n";
             var footer =
                 $"}}\n";
             var code = 
                 header +
-                (_methods.Any(m => !m.IsStatic) ? constructor : "") +
+                constructorHeader +
+                ptrFieldsDeclarations +
+                constructorFooter +
                 string.Join("\n", _methods.Select(GenerateScriptMethodWrapper)) + "\n" +
                 footer;
             GeneratorUtils.WriteFile(code, $"../../scripts/{filePath}", protectEditor: false);
@@ -129,9 +134,10 @@ namespace org.kharynic.Scripting
                 $"        public static {returnType} {method.Name}({paramList})\n" +
                 $"        {{\n";
             const string thisRefVar = "thisRef";
+            const string thisHandleVar = "thisHandle";
             var thisRefDeclaration = method.IsStatic ? "" :
-                $"            var thisHandle = {typeof(GCHandle).FullName}.{nameof(GCHandle.FromIntPtr)}({ThisPtrVar});\n" +
-                $"            var {thisRefVar} = ({_targetType.FullName}) thisHandle.{nameof(GCHandle.Target)};\n";
+                $"            var {thisHandleVar} = {typeof(GCHandle).FullName}.{nameof(GCHandle.FromIntPtr)}({ThisPtrVar});\n" +
+                $"            var {thisRefVar} = ({_targetType.FullName}) {thisHandleVar}.{nameof(GCHandle.Target)};\n";
             var stringParams = method.GetParameters().Where(p => p.ParameterType == typeof(string));
             var stringParamDeclarations = string.Join("", stringParams.Select(p =>
                 $"            var {p.Name} = {typeof(Marshal).FullName}.{nameof(Marshal.PtrToStringAuto)}({p.Name}Ptr);\n"));
@@ -222,13 +228,14 @@ namespace org.kharynic.Scripting
 
         private string GetScriptNamespaceDeclarations()
         {
+            const string rootObject = "window";
             var @namespace = _targetType.Namespace;
             if (@namespace == null)
                 return "";
             var namespaceSegments = @namespace.Split('.');
             var namespaceDeclarations =
                 Enumerable.Range(1, namespaceSegments.Length)
-                    .Select(i => string.Join(".", namespaceSegments.Take(i)))
+                    .Select(i => (i == 1 ? $"{rootObject}." : "") + string.Join(".", namespaceSegments.Take(i)))
                     .Select(n => $"{n} = {n} || {{}};");
             return string.Join("\n", namespaceDeclarations);
         }
