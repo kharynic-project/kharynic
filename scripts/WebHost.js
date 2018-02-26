@@ -58,14 +58,26 @@ window.WebHost = {
         canvas.requestPointerLock();
     },
     LoadScript: function(path) {
+        console.log("loading " + path);
         var script = document.createElement("script");
-        script.setAttribute("src", "scripts/" + path);
+        script.setAttribute("src", path);
         document.head.appendChild(script);
     },
+    LoadAllScripts: function(listPath) {
+        var loadScript = this.LoadScript;
+        fetch(listPath).then(function(response) {
+            response.text().then(function(list) {
+                list.split('\n').forEach(line => {
+                    if(!line.startsWith("// ") && line.length > 0)
+                        loadScript(line)
+                });
+            })
+        });
+    },
     LoadScripts: function() {
-        this.LoadScript("Scripts.js");
-        this.LoadScript("Engine.js");
-        this.LoadScript("Engine.generated.js");
+        this.LoadScript("scripts/Scripts.js");
+        this.LoadScript("scripts/Engine/Scripting/Runtime.js");
+        this.LoadAllScripts("scripts/filelist.generated.txt");
     },
     ShowWatermark: function() {
         var watermark = document.createElement("div");
