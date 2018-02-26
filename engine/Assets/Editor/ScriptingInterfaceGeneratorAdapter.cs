@@ -2,7 +2,7 @@
 
 namespace org.kharynic.Editor
 {
-    public class EcmaScriptInterfaceGeneratorAdapter : UnityEditor.Build.IPreprocessBuild
+    public class ScriptingInterfaceGeneratorAdapter : UnityEditor.Build.IPreprocessBuild
     {
         public int callbackOrder => 2;
 
@@ -15,9 +15,9 @@ namespace org.kharynic.Editor
                 $"//       Externals\n" +
                 $"//  Phoenix V{kharynic.BuildInfo.Version}\n" +
                 $"// *********************\n\n";
-            Generator.GenerateAllInterfaces(typeof(ScriptingInterface).Assembly, scriptHeader);
+            ScriptingInterfaceGenerator.GenerateAllInterfaces(typeof(ScriptingInterface).Assembly, scriptHeader);
             UnityEditor.AssetDatabase.Refresh();
-            Debug.Log($"{nameof(EcmaScriptInterfaceGeneratorAdapter)} finished");
+            Debug.Log($"{nameof(ScriptingInterfaceGeneratorAdapter)} finished");
         }
 
         public void OnPreprocessBuild(UnityEditor.BuildTarget target, string path)
