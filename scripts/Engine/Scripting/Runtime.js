@@ -7,8 +7,9 @@ org.kharynic.Scripting.Runtime = class
 {
     static Init(emscriptenModule)
     {
-        this.constructor._emscriptenModule = emscriptenModule;
-        this.constructor.GetStringFromPtr = emscriptenModule.UTF8ToString;
+        this._emscriptenModule = emscriptenModule;
+        this.GetStringFromPtr = emscriptenModule.UTF8ToString; // Pointer_stringify?
+        console.log("org.kharynic.Scripting.Runtime: initialized")
     }
 
     static GetStringFromPtr()
@@ -18,20 +19,20 @@ org.kharynic.Scripting.Runtime = class
 
     static DynCall(sig /*: string*/, ptr /*: int*/, args /*: any[]*/)
     {
-        return _emscriptenModule['dynCall_' + sig].apply(null, [ptr].concat(args));
+        return this._emscriptenModule['dynCall_' + sig].apply(null, [ptr].concat(args));
     }
 
     static GetPtrFromString(str) 
     {
-        var bufferSize = this.constructor.emscriptenModule.lengthBytesUTF8(str) + 1;
-        var buffer = this.constructor.emscriptenModule._malloc(bufferSize);
-        this.constructor.emscriptenModule.stringToUTF8(str, buffer, bufferSize);
+        var bufferSize = this._emscriptenModule.lengthBytesUTF8(str) + 1;
+        var buffer = this._emscriptenModule._malloc(bufferSize);
+        this._emscriptenModule.stringToUTF8(str, buffer, bufferSize);
         return buffer;
     }
 
     static RegisterExternalMethod(qualifiedName, pointer)
     {
-        var referenceSegments = Pointer_stringify(qualifiedName).split(".");
+        var referenceSegments = this.GetStringFromPtr(qualifiedName).split(".");
         var parentType = window;
         for(var i=0; i<referenceSegments.length-1; i++)
             parentType = parentType[referenceSegments[i]];

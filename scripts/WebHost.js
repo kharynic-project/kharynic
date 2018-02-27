@@ -34,7 +34,12 @@ window.WebHost = {
         this.PlayerFrame.id = "PlayerFrame";
         this.PlayerFrame.src = "bin/index.html";
         this.PlayerFrame.onload = function(event) {
-            WebHost.PlayerFrame.contentWindow.WebHost = WebHost;
+            var playerWindow = event.srcElement.contentWindow;
+            WebHost.SecureRequests(playerWindow);
+            // bridge namespaces
+            window.org = window.org || {};
+            playerWindow.org = window.org;
+            playerWindow.WebHost = WebHost;
             WebHost.GameContainer = WebHost.PlayerFrame.contentDocument.getElementById("gameContainer");
         }
         this.PlayerFrame.style.opacity = 0;
@@ -75,9 +80,9 @@ window.WebHost = {
         });
     },
     LoadScripts: function() {
-        this.LoadScript("scripts/Scripts.js");
-        this.LoadScript("scripts/Engine/Scripting/Runtime.js");
-        this.LoadAllScripts("scripts/filelist.generated.txt");
+        this.LoadScript("/scripts/Scripts.js");
+        this.LoadScript("/scripts/Engine/Scripting/Runtime.js");
+        this.LoadAllScripts("/scripts/filelist.generated.txt");
     },
     ShowWatermark: function() {
         var watermark = document.createElement("div");
@@ -90,6 +95,17 @@ window.WebHost = {
                 watermark.textContent = "Kharynic Engine v" + version + "\n" + watermark.textContent;
             })
         });
+    },
+    SecureRequests(window) {
+        // mods/branches ran inside iframe can only use local requests
+        var nativeOpen = window.XMLHttpRequest.prototype.open;
+        window.XMLHttpRequest.prototype.open = function(method, url) {
+            if (url.indexOf("//") > 0) {
+                url = document.location.origin + "/blocked?" + encodeURIComponent(url);
+                this.send = function() { };
+            }
+            nativeOpen.apply(this, arguments);
+        };
     },
     Init: function(host) {
         this.Host = host;
