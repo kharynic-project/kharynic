@@ -56,7 +56,11 @@ namespace org.kharynic.Scripting
         private static string GetQualifiedName(MethodInfo m)
         {
             System.Diagnostics.Debug.Assert(m.DeclaringType != null);
-            return $"{m.DeclaringType.FullName}.{m.Name}";
+            var qualifiedTypeName = m.DeclaringType.FullName; //with _generated suffix
+            System.Diagnostics.Debug.Assert(qualifiedTypeName != null);
+            var typeSuffixLength = CSharpLayerGenerator.GeneratedInterfaceSuffix.Length;
+            qualifiedTypeName = qualifiedTypeName.Substring(0, qualifiedTypeName.Length - typeSuffixLength);
+            return $"{qualifiedTypeName}.{m.Name}";
         }
 
 #if !UNITY_EDITOR

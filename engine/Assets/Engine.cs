@@ -27,8 +27,10 @@ namespace org.kharynic
 				Debug.Log($"args: {string.Join(" ", args)}");
 			CoroutineManager.Start();
 			Debug.Log($"loading game from {Scripts.GetRootUrl()}");
-			Runtime.RegisterAll(GetType().Assembly);
+			// todo: specify loading order. OnLoad needs to be called before RegisterAll, 
+			// as it's needed to signal that emscripten module is ready to use.
 			Scripts.OnLoad();
+			Runtime.RegisterAll(GetType().Assembly);
 		}
 
 		public void Dispose()

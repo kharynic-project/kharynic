@@ -10,7 +10,7 @@ namespace org.kharynic.Scripting
     // TODO: support for reference parameters and return types
     internal class CSharpLayerGenerator : GeneratorBase
     {
-        private const string GeneratedInterfaceSuffix = "_generated";
+        public const string GeneratedInterfaceSuffix = "_generated";
 
         public CSharpLayerGenerator(Type targetType, string rootNamespace) 
             : base(
