@@ -9,6 +9,7 @@ org.kharynic.Scripting.Runtime = class
     {
         this._emscriptenModule = emscriptenModule;
         this.GetStringFromPtr = emscriptenModule.UTF8ToString; // Pointer_stringify?
+        this.DynCall = emscriptenModule.Runtime.dynCall;
         console.log("org.kharynic.Scripting.Runtime: initialized")
     }
 
@@ -19,7 +20,7 @@ org.kharynic.Scripting.Runtime = class
 
     static DynCall(sig /*: string*/, ptr /*: int*/, args /*: any[]*/)
     {
-        return this._emscriptenModule['dynCall_' + sig].apply(null, [ptr].concat(args));
+        throw new Error('uninitialized');
     }
 
     static GetPtrFromString(str) 

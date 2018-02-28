@@ -1,9 +1,9 @@
-// Code generated on 2018.02.26 by /engine/Assets/Scripting/ScriptLayerGenerator.cs - DO NOT EDIT.
+// Code generated on 2018.02.28 by /engine/Assets/Scripting/ScriptLayerGenerator.cs - DO NOT EDIT.
 // this file is used by scripts which cannot regenerate it, so it has to be commited
 
 // *********************
 //       Externals
-//  Phoenix V0.0.81+acf_preview
+//  Phoenix V0.0.90+707_preview
 // *********************
 
 
@@ -21,7 +21,7 @@ org.kharynic.ScriptingInterface = class
     {
         message = org.kharynic.Scripting.Runtime.GetPtrFromString(message);
         var sig = "vi";
-        var ptr = this.constructor.HelloPtr;
+        var ptr = this.HelloPtr;
         var args = [ message ];
         var result = org.kharynic.Scripting.Runtime.DynCall(sig, ptr, args);
     }
@@ -29,7 +29,7 @@ org.kharynic.ScriptingInterface = class
     static Add(a /*: System.Int32*/, b /*: System.Int32*/) /*: System.Int32*/
     {
         var sig = "iii";
-        var ptr = this.constructor.AddPtr;
+        var ptr = this.AddPtr;
         var args = [ a, b ];
         var result = org.kharynic.Scripting.Runtime.DynCall(sig, ptr, args);
         return result;
@@ -38,7 +38,7 @@ org.kharynic.ScriptingInterface = class
     static GetEngine() /*: System.IntPtr*/
     {
         var sig = "i";
-        var ptr = this.constructor.GetEnginePtr;
+        var ptr = this.GetEnginePtr;
         var args = [  ];
         var result = org.kharynic.Scripting.Runtime.DynCall(sig, ptr, args);
         return result;

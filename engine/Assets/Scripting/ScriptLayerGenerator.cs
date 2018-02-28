@@ -62,7 +62,7 @@ namespace org.kharynic.Scripting
             var paramNames = @params.Select(p => p.Name);
             var call =
                 $"        var sig = \"{sig}\";\n" +
-                $"        var ptr = this.constructor.{method.Name}{PtrSuffix};\n" +
+                $"        var ptr = this{(method.IsStatic?"":".constructor")}.{method.Name}{PtrSuffix};\n" +
                 $"        var args = [ {string.Join(", ", paramNames)} ];\n" +
                 $"        var result = {typeof(Runtime).FullName}.DynCall(sig, ptr, args);\n";
             var resultConversion = (method.ReturnType == typeof(string)) ? 

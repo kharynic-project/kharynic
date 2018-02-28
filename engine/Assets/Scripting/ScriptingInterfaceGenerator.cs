@@ -31,7 +31,7 @@ namespace org.kharynic.Scripting
                 GeneratorUtils.GetHeaderComment() + "\n" +
                 string.Join("\n", paths) + "\n";
             const string path = "scripts/filelist.generated.txt";
-            GeneratorUtils.WriteFile(list, path, protectEditor: false);
+            GeneratorUtils.WriteFile(list, path);
         }
 
         // finds types this needs to be ran on
