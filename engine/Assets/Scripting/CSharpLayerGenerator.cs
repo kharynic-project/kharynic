@@ -28,7 +28,7 @@ namespace org.kharynic.Scripting
                 $"{{\n" +
                 $"    {GeneratorUtils.GetHeaderComment()}\n" +
                 $"    [{typeof(GeneratedInterfaceAttribute).FullName}]\n" +
-                $"    public class {TargetType.Name}{GeneratedInterfaceSuffix}\n" +
+                $"    public static class {TargetType.Name}{GeneratedInterfaceSuffix}\n" +
                 $"    {{\n";
             var footer =
                 $"    }}\n" +

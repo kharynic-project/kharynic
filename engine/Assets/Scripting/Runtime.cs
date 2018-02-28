@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -19,9 +20,11 @@ namespace org.kharynic.Scripting
         {
             var methods = 
                 GetInterfaces(assembly)
-                .SelectMany(GetInterfaceData);
+                .SelectMany(GetInterfaceData)
+                .ToArray();
             foreach (var method in methods)
                 RegisterExternalMethod(method.Key, method.Value);
+            Debug.Log($"{methods.Length} methods registered");
         }
 
         public static IntPtr GetPointer(object o)
@@ -42,10 +45,10 @@ namespace org.kharynic.Scripting
         {
             return type
                 .GetMethods(MethodBindingFlags)
-                .ToDictionary(GetQualifiedName, GetPointer);
+                .ToDictionary(GetQualifiedName, GetMethodPointer);
         }
 
-        private static IntPtr GetPointer(MethodInfo m)
+        private static IntPtr GetMethodPointer(MethodInfo m)
         {
             var delegateType = m.DeclaringType?.GetNestedType($"{m.Name}{nameof(Delegate)}");
             System.Diagnostics.Debug.Assert(delegateType != null);

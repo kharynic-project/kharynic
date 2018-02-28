@@ -20,6 +20,7 @@ engine/Assembly-CSharp.csproj
 engine/Assembly-CSharp-Editor.csproj
 engine/Assembly-CSharp-Editor-firstpass.csproj
 engine/engine.sln
+*__jb_*
 *.generated.cs
 *.generated.jslib
 

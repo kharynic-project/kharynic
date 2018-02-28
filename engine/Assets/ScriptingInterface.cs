@@ -22,17 +22,17 @@ namespace org.kharynic
         {
             _engine = engine;
         }
-        
+
         [Scriptable]
         public static void Hello(string message)
         {
-            Debug.Log($"ScriptingInterface.Hello({message})");
+            Debug.Log($"{nameof(ScriptingInterface)}.{nameof(Hello)}({message})");
         }
         
         [Scriptable]
         public static int Add(int a, int b)
         {
-            Debug.Log($"ScriptingInterface.Add({a}, {b})");
+            Debug.Log($"{nameof(ScriptingInterface)}.{nameof(Add)}({a}, {b})");
             return a + b;
         }
         
