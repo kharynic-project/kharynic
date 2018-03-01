@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 
-namespace org.kharynic.Scripting
+namespace Kharynic.Engine.Scripting
 {
     public static class GeneratorUtils
     {

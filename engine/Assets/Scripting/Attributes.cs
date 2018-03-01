@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace org.kharynic.Scripting
+namespace Kharynic.Engine.Scripting
 {
     // Used to mark method as accessible from scripts
     // TODO: field / property support

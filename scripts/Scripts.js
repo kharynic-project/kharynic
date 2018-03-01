@@ -8,7 +8,7 @@ window.WebHost.Scripts =
     OnLoad: function () /*: void*/
     {
         window.WebHost.OnLoad();
-        org.kharynic.Scripting.Runtime.Init(window.WebHost.Player.Module);
+        Kharynic.Engine.Scripting.Runtime.Init(window.WebHost.Player.Module);
         window.WebHost.HideSplash();
     },
 

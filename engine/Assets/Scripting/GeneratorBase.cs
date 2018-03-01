@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace org.kharynic.Scripting
+namespace Kharynic.Engine.Scripting
 {
     internal abstract class GeneratorBase
     {

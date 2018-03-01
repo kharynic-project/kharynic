@@ -1,6 +1,6 @@
-﻿using org.kharynic.Scripting;
+﻿using Kharynic.Engine.Scripting;
 
-namespace org.kharynic.Editor
+namespace Kharynic.Engine.Editor
 {
     public class ScriptingInterfaceGeneratorAdapter : UnityEditor.Build.IPreprocessBuild
     {
@@ -13,7 +13,7 @@ namespace org.kharynic.Editor
                 $"// this file is used by scripts which cannot regenerate it, so it has to be commited\n\n" +
                 $"// *********************\n" +
                 $"//       Externals\n" +
-                $"//  Phoenix V{kharynic.BuildInfo.Version}\n" +
+                $"//  Phoenix V{Kharynic.Engine.BuildInfo.Version}\n" +
                 $"// *********************\n\n";
             ScriptingInterfaceGenerator.GenerateAllInterfaces(typeof(ScriptingInterface).Assembly, scriptHeader);
             UnityEditor.AssetDatabase.Refresh();

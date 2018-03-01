@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace org.kharynic.Scripting
+namespace Kharynic.Engine.Scripting
 {
     // Generates C# glue code for calling .net methods from scripts.
     // TODO: support for reference parameters and return types

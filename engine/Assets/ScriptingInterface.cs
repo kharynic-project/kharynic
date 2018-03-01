@@ -1,19 +1,8 @@
 ﻿using System;
-using org.kharynic.Scripting;
+using Kharynic.Engine.Scripting;
 
-namespace org.kharynic
+namespace Kharynic.Engine
 {
-    /*
-     * org.kharynic.Editor.EngineExternals.Generator generates nested Wrappers
-     * class containing equivalents of these methods marked with AOT.MonoPInvokeCallback.
-     * They also convert Emscripten string pointers to CLR strings and are
-     * accompanied by delegate declarations required for MonoPInvokeCallback.
-     * Only basic parameter types are allowed, but window.JSON.stringify and
-     * UnityEngine.JsonUtility.FromJson<T> can be sparingly used to pass complex
-     * parameters.
-     * Calling these functions requires separate JS-side wrappers using
-     * WebHost.Player.Module.Runtime.dynCall.
-     */
     public class ScriptingInterface
     {
         private readonly Engine _engine;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace org.kharynic.Scripting
+namespace Kharynic.Engine.Scripting
 {
     // Generates EcmaScript glue code for calling .net methods from scripts.
     // Generated code needs to be initialized at runtime by Runtime.RegisterAll.
@@ -59,7 +59,7 @@ namespace org.kharynic.Scripting
             var returnTypeSymbol = GetDyncallSigTypeSymbol(method.ReturnType);
             var paramTypeSymbols = @params.Select(p => GetDyncallSigTypeSymbol(p.Type));
             var sig = returnTypeSymbol + string.Join("", paramTypeSymbols);
-            var paramNames = @params.Select(p => p.Name);
+            var paramNames = @params.Select(p => p.Name == ThisPtrVar ? $"this.{p.Name}" : p.Name);
             var call =
                 $"        var sig = \"{sig}\";\n" +
                 $"        var ptr = this{(method.IsStatic?"":".constructor")}.{method.Name}{PtrSuffix};\n" +

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace org.kharynic.Scripting
+namespace Kharynic.Engine.Scripting
 {
     public static class ScriptingInterfaceGenerator
     {

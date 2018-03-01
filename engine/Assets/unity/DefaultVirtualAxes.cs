@@ -1,4 +1,4 @@
-﻿namespace org.kharynic.unity
+﻿namespace Kharynic.Engine.Unity
 {
     public static class DefaultVirtualAxes
     {

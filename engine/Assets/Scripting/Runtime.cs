@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace org.kharynic.Scripting
+namespace Kharynic.Engine.Scripting
 {
     // Use this class to gather runtime method data from generated code and pass it to scripts.
     // They already have generated wrappers, but function pointers are needed to run them.
