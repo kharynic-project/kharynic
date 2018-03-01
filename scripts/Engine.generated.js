@@ -1,9 +1,9 @@
-// generated on 2018.02.26 08:35 by /engine/Assets/Scripting/Generator.cs
+// Code generated on 2018.03.01 by /engine/Assets/Scripting/ScriptLayerGenerator.cs - DO NOT EDIT.
 // this file is used by scripts which cannot regenerate it, so it has to be commited
 
 // *********************
 //       Externals
-//  Phoenix V0.0.81+e83_preview
+//  Phoenix V0.0.92+0ae
 // *********************
 
 
@@ -19,9 +19,9 @@ org.kharynic.Engine = class
 
     GetVersion() /*: System.String*/
     {
-        var sig = "i";
+        var sig = "ii";
         var ptr = this.constructor.GetVersionPtr;
-        var args = [  ];
+        var args = [ thisPtr ];
         var result = org.kharynic.Scripting.Runtime.DynCall(sig, ptr, args);
         result = org.kharynic.Scripting.Runtime.GetStringFromPtr(result);
         return result;

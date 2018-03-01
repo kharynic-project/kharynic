@@ -48,7 +48,7 @@ namespace org.kharynic.Scripting
         private static string GenerateMethodWrapper(MethodInfo method)
         {
             var @params = GetParams(method);
-            var paramDeclarations = @params.Select(p => $"{p.Name} /*: {p.Type.FullName}*/");
+            var paramDeclarations = @params.Where(p => p.Name != ThisPtrVar).Select(p => $"{p.Name} /*: {p.Type.FullName}*/");
             var staticKeyword = method.IsStatic ? "static " : "";
             var name = method.Name; //TODO? .Replace("get_", "get ").Replace("set_", "set ");
             var header =
@@ -83,8 +83,12 @@ namespace org.kharynic.Scripting
         
         private static VarInfo[] GetParams(MethodBase method)
         {
-            return method.GetParameters()
-                .Select(p => new VarInfo {Name = p.Name, Type = p.ParameterType})
+            var thisParam =
+                method.IsStatic
+                    ? Enumerable.Empty<VarInfo>()
+                    : new[] {new VarInfo {Name = ThisPtrVar, Type = method.DeclaringType}};
+            return thisParam.Concat(
+                    method.GetParameters().Select(p => new VarInfo {Name = p.Name, Type = p.ParameterType}))
                 .ToArray();
         }
         
