@@ -2,9 +2,9 @@
 
 using System;
 
-namespace org.kharynic
+namespace Kharynic.Engine
 {
-    // generated on 2018.02.25 22:32 by /engine/Assets/Editor/Scripts.Generator.cs
+    // Code generated on 2018.03.01 by /Engine/Assets/Editor/Scripts.Generator.cs - DO NOT EDIT.
     // this file is used by editor preview which cannot regenerate it, so it has to be commited
     public static class Scripts
     {

@@ -37,8 +37,8 @@ window.WebHost = {
             var playerWindow = event.srcElement.contentWindow;
             WebHost.SecureRequests(playerWindow);
             // bridge namespaces
-            window.org = window.org || {};
-            playerWindow.org = window.org;
+            window.Kharynic = window.Kharynic || {};
+            playerWindow.Kharynic = window.Kharynic;
             playerWindow.WebHost = WebHost;
             WebHost.GameContainer = WebHost.PlayerFrame.contentDocument.getElementById("gameContainer");
         }

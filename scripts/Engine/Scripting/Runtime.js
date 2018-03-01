@@ -1,29 +1,29 @@
-window.org = window.org || {};
-org.kharynic = org.kharynic || {};
-org.kharynic.Scripting = org.kharynic.Scripting || {};
+window.Kharynic = window.Kharynic || {};
+Kharynic.Engine = Kharynic.Engine || {};
+Kharynic.Engine.Scripting = Kharynic.Engine.Scripting || {};
 
-// This class has C# part (engine/Assets/Scripting/Runtime.cs).
-org.kharynic.Scripting.Runtime = class
+// This class has C# part (/Engine/Assets/Scripting/Runtime.cs).
+Kharynic.Engine.Scripting.Runtime = class
 {
     static Init(emscriptenModule)
     {
         this._emscriptenModule = emscriptenModule;
         this.GetStringFromPtr = emscriptenModule.UTF8ToString; // Pointer_stringify?
         this.DynCall = emscriptenModule.Runtime.dynCall;
-        console.log("org.kharynic.Scripting.Runtime: initialized")
+        console.log("Kharynic.Engine.Scripting.Runtime: initialized")
     }
 
-    static GetStringFromPtr()
+    static GetStringFromPtr(ptr /*: int*/)
     {
         throw new Error('uninitialized');
     }
 
-    static DynCall(sig /*: string*/, ptr /*: int*/, args /*: any[]*/)
+    static DynCall(sig /*: string*/, ptr /*: int*/, args /*: object[]*/)
     {
         throw new Error('uninitialized');
     }
 
-    static GetPtrFromString(str) 
+    static GetPtrFromString(str /*: string*/) 
     {
         var bufferSize = this._emscriptenModule.lengthBytesUTF8(str) + 1;
         var buffer = this._emscriptenModule._malloc(bufferSize);
@@ -31,7 +31,7 @@ org.kharynic.Scripting.Runtime = class
         return buffer;
     }
 
-    static RegisterExternalMethod(qualifiedName, pointer)
+    static RegisterExternalMethod(qualifiedName /*: string*/, pointer /*: int*/)
     {
         var referenceSegments = this.GetStringFromPtr(qualifiedName).split(".");
         var parentType = window;

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using org.kharynic.Scripting;
+using Kharynic.Engine.Scripting;
 using UnityEditor;
 using UnityEditor.Build;
 
-namespace org.kharynic.Editor
+namespace Kharynic.Engine.Editor
 {
     public static class Scripts
     {
@@ -73,10 +73,10 @@ namespace org.kharynic.Editor
                 var code = new StringBuilder(
                     $"using {typeof(IntPtr).Namespace};\n" +
                     $"using {typeof(DllImportAttribute).Namespace};\n\n" +
-                    $"namespace {typeof(kharynic.Scripts).Namespace}\n" +
+                    $"namespace {typeof(Kharynic.Engine.Scripts).Namespace}\n" +
                     $"{{\n" +
                     $"    {GeneratorUtils.GetHeaderComment()}\n" +
-                    $"    public static class {nameof(kharynic.Scripts)}\n" +
+                    $"    public static class {nameof(Kharynic.Engine.Scripts)}\n" +
                     $"    {{\n" +
                     $"        public const bool Enabled = true;\n\n");
                 code.Append(String.Join("\n\n", functions.Select(function =>
@@ -88,7 +88,7 @@ namespace org.kharynic.Editor
                 code.Append(
                     $"\n    }}\n" +
                     $"}}\n");
-                var path = $"{kharynic.BuildInfo.RelativeEngineAssetsPath}/Scripts.generated.cs";
+                var path = $"{Kharynic.Engine.BuildInfo.RelativeEngineAssetsPath}/Scripts.generated.cs";
                 GeneratorUtils.WriteFile(code.ToString(), path);
             }
 
@@ -97,11 +97,11 @@ namespace org.kharynic.Editor
                 var code = new StringBuilder(
                     $"#if UNITY_EDITOR\n\n" + 
                     $"using {typeof(IntPtr).Namespace};\n\n" +
-                    $"namespace {typeof(kharynic.Scripts).Namespace}\n" +
+                    $"namespace {typeof(Kharynic.Engine.Scripts).Namespace}\n" +
                     $"{{\n" +
                     $"    {GeneratorUtils.GetHeaderComment()}\n" +
                     $"    // this file is used by editor preview which cannot regenerate it, so it has to be commited\n" +
-                    $"    public static class {nameof(kharynic.Scripts)}\n" +
+                    $"    public static class {nameof(Kharynic.Engine.Scripts)}\n" +
                     $"    {{\n" +
                     $"        public const bool Enabled = false;\n\n");
                 code.Append(String.Join("\n\n", functions.Select(function =>
@@ -110,13 +110,13 @@ namespace org.kharynic.Editor
                     var returnStatement = function.Type != "void" ? $" return default({function.Type});" : "";
                     return
                         $"        public static {function.Type} {function.Name}({parameters}) " +
-                        $"{{ Debug.Log(\"{nameof(kharynic.Scripts)}.{function.Name}: unsupported platform\");{returnStatement} }}";
+                        $"{{ Debug.Log(\"{nameof(Kharynic.Engine.Scripts)}.{function.Name}: unsupported platform\");{returnStatement} }}";
                 })));
                 code.Append(
                     $"\n    }}\n" +
                     $"}}\n" + 
                     $"\n#endif\n");
-                var path = $"{kharynic.BuildInfo.RelativeEngineAssetsPath}/Scripts.preview.cs";
+                var path = $"{Kharynic.Engine.BuildInfo.RelativeEngineAssetsPath}/Scripts.preview.cs";
                 GeneratorUtils.WriteFile(code.ToString(), path, protectEditor: false);
             }
 
@@ -169,7 +169,7 @@ namespace org.kharynic.Editor
                         $"    }}";
                 })));
                 code.Append("\n});\n");
-                var path = $"{kharynic.BuildInfo.RelativeEngineAssetsPath}/Plugins/Scripts.generated.jslib";
+                var path = $"{Kharynic.Engine.BuildInfo.RelativeEngineAssetsPath}/Plugins/Scripts.generated.jslib";
                 GeneratorUtils.WriteFile(code.ToString(), path);
             }
         }

@@ -4,14 +4,14 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using org.kharynic.Scripting;
+using Kharynic.Engine.Scripting;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEngine;
 
-namespace org.kharynic.Editor
+namespace Kharynic.Engine.Editor
 {
-    public static partial class BuildInfo
+    public static class BuildInfo
     {
         public class Generator : IPreprocessBuild
         {
@@ -20,7 +20,7 @@ namespace org.kharynic.Editor
             public void OnPreprocessBuild(BuildTarget target, string buildPath)
             {
                 var code = new StringBuilder(
-                    $"namespace {typeof(kharynic.BuildInfo).Namespace}\n" +
+                    $"namespace {typeof(Kharynic.Engine.BuildInfo).Namespace}\n" +
                     "{\n" +
                     $"    public static partial class {nameof(BuildInfo)}\n" +
                     "    {\n");
@@ -30,7 +30,7 @@ namespace org.kharynic.Editor
                 code.Append(
                     "    }\n" +
                     "}\n");
-                var path = $"{kharynic.BuildInfo.RelativeEngineAssetsPath}/{nameof(BuildInfo)}.generated.cs";
+                var path = $"{Kharynic.Engine.BuildInfo.RelativeEngineAssetsPath}/{nameof(BuildInfo)}.generated.cs";
                 GeneratorUtils.WriteFile(code.ToString(), path);
                 Debug.Log($"{GetType().FullName} finished");
                 //TODO: explore usages of EditorUtility.CompileCSharp()
@@ -45,7 +45,7 @@ namespace org.kharynic.Editor
                 version[2] = (int.Parse(version[2]) + 1).ToString();
                 version[3] = Guid.NewGuid().GetHashCode().ToString("x8").Substring(0, 3);
                 var versionString = $"{version[0]}.{version[1]}.{version[2]}+{version[3]}";
-                kharynic.BuildInfo.Version = versionString;
+                Kharynic.Engine.BuildInfo.Version = versionString;
                 File.WriteAllText(filePath, versionString);
                 return versionString;
             }

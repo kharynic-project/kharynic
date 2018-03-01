@@ -1,16 +1,16 @@
-// Code generated on 2018.02.28 by /engine/Assets/Scripting/ScriptLayerGenerator.cs - DO NOT EDIT.
+// Code generated on 2018.03.01 by /Engine/Assets/Scripting/ScriptLayerGenerator.cs - DO NOT EDIT.
 // this file is used by scripts which cannot regenerate it, so it has to be commited
 
 // *********************
 //       Externals
-//  Phoenix V0.0.90+707_preview
+//  Phoenix V0.0.73+a0a_preview
 // *********************
 
 
-window.org = window.org || {};
-org.kharynic = org.kharynic || {};
+window.Kharynic = window.Kharynic || {};
+Kharynic.Engine = Kharynic.Engine || {};
 
-org.kharynic.ScriptingInterface = class
+Kharynic.Engine.ScriptingInterface = class
 {
     constructor(thisPtr /*: System.IntPtr*/)
     {
@@ -19,11 +19,11 @@ org.kharynic.ScriptingInterface = class
 
     static Hello(message /*: System.String*/) /*: System.Void*/
     {
-        message = org.kharynic.Scripting.Runtime.GetPtrFromString(message);
+        message = Kharynic.Engine.Scripting.Runtime.GetPtrFromString(message);
         var sig = "vi";
         var ptr = this.HelloPtr;
         var args = [ message ];
-        var result = org.kharynic.Scripting.Runtime.DynCall(sig, ptr, args);
+        var result = Kharynic.Engine.Scripting.Runtime.DynCall(sig, ptr, args);
     }
 
     static Add(a /*: System.Int32*/, b /*: System.Int32*/) /*: System.Int32*/
@@ -31,7 +31,7 @@ org.kharynic.ScriptingInterface = class
         var sig = "iii";
         var ptr = this.AddPtr;
         var args = [ a, b ];
-        var result = org.kharynic.Scripting.Runtime.DynCall(sig, ptr, args);
+        var result = Kharynic.Engine.Scripting.Runtime.DynCall(sig, ptr, args);
         return result;
     }
 
@@ -40,7 +40,7 @@ org.kharynic.ScriptingInterface = class
         var sig = "i";
         var ptr = this.GetEnginePtr;
         var args = [  ];
-        var result = org.kharynic.Scripting.Runtime.DynCall(sig, ptr, args);
+        var result = Kharynic.Engine.Scripting.Runtime.DynCall(sig, ptr, args);
         return result;
     }
 }

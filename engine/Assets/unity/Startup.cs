@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace org.kharynic.unity
+namespace Kharynic.Engine.Unity
 {
     public class Startup : MonoBehaviour
     {

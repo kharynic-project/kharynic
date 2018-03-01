@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
     using System.Linq;
 #endif
 
-namespace org.kharynic
+namespace Kharynic.Engine
 {
     public static partial class BuildInfo
     {

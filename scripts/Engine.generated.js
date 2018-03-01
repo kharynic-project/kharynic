@@ -1,16 +1,16 @@
-// Code generated on 2018.03.01 by /engine/Assets/Scripting/ScriptLayerGenerator.cs - DO NOT EDIT.
+// Code generated on 2018.03.01 by /Engine/Assets/Scripting/ScriptLayerGenerator.cs - DO NOT EDIT.
 // this file is used by scripts which cannot regenerate it, so it has to be commited
 
 // *********************
 //       Externals
-//  Phoenix V0.0.92+0ae
+//  Phoenix V0.0.73+a0a_preview
 // *********************
 
 
-window.org = window.org || {};
-org.kharynic = org.kharynic || {};
+window.Kharynic = window.Kharynic || {};
+Kharynic.Engine = Kharynic.Engine || {};
 
-org.kharynic.Engine = class
+Kharynic.Engine.Engine = class
 {
     constructor(thisPtr /*: System.IntPtr*/)
     {
@@ -21,9 +21,9 @@ org.kharynic.Engine = class
     {
         var sig = "ii";
         var ptr = this.constructor.GetVersionPtr;
-        var args = [ thisPtr ];
-        var result = org.kharynic.Scripting.Runtime.DynCall(sig, ptr, args);
-        result = org.kharynic.Scripting.Runtime.GetStringFromPtr(result);
+        var args = [ this.thisPtr ];
+        var result = Kharynic.Engine.Scripting.Runtime.DynCall(sig, ptr, args);
+        result = Kharynic.Engine.Scripting.Runtime.GetStringFromPtr(result);
         return result;
     }
 }

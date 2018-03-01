@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 
-namespace org.kharynic
+namespace Kharynic.Engine
 {
     public static class Debug
     {

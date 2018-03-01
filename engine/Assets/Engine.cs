@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using org.kharynic.Scripting;
+using Kharynic.Engine.Scripting;
 
-namespace org.kharynic
+namespace Kharynic.Engine
 {
 	public class Engine : IDisposable
 	{

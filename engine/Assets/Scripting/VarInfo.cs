@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace org.kharynic.Scripting
+namespace Kharynic.Engine.Scripting
 {
     internal class VarInfo
     {
