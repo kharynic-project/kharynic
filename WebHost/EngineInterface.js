@@ -1,7 +1,9 @@
 // This file defines scripts interface exposed to the engine.
 // It is used by build script to generate C# interface and .jslib Emscripten wrapper.
 // For this reason it needs type annotations in block comments.
-window.WebHost.Scripts = 
+window.Kharynic = window.Kharynic || {};
+
+Kharynic.WebHost.EngineInterface = 
 {
     Externals: {},
 

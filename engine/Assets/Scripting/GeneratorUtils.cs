@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace Kharynic.Engine.Scripting
 {
@@ -12,6 +13,7 @@ namespace Kharynic.Engine.Scripting
             return $"// Code generated on {DateTime.Now:yyyy.MM.dd} by {relativePath} - DO NOT EDIT.";
         }
 
+        // TODO: assert that path starts with / (is project-absolute)
         public static void WriteFile(string code, string path, bool protectEditor = true)
         {
             if (!path.EndsWith(".cs", StringComparison.InvariantCultureIgnoreCase))
@@ -29,7 +31,18 @@ namespace Kharynic.Engine.Scripting
 
         public static string ReadFile(string path)
         {
+            path = (BuildInfo.LocalProjectPath + "/" + path).Replace("//", "/");
             return File.ReadAllText(Path.Combine(UnityEngine.Application.dataPath, path));
+        }
+
+        public static string GetSourceFilePath(Type type, string extension, bool isUnityAsset = false, bool isGenerated = true)
+        {
+            var qualifiedName = $"{type.Namespace}.{type.Name}";
+            var relativeName = new Regex($"^{BuildInfo.RootNamespace}").Replace(qualifiedName, "");
+            var path = $"/{relativeName.Replace(".", "/")}.{(isGenerated ? "generated." : "")}{extension}";
+            if (isUnityAsset)
+                path = new Regex($"^/Engine/").Replace(path, "/Engine/Assets/");
+            return path;
         }
     }
 }

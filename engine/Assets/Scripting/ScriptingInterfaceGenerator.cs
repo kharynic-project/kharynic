@@ -15,8 +15,8 @@ namespace Kharynic.Engine.Scripting
             var rootNamespace = BuildInfo.RootNamespace;
             foreach (var type in scriptableTypes)
             {
-                var cSharpLayerGenerator = new CSharpLayerGenerator(type, rootNamespace);
-                var scriptLayerGenerator = new ScriptLayerGenerator(type, rootNamespace, scriptHeader);
+                var cSharpLayerGenerator = new CSharpLayerGenerator(type);
+                var scriptLayerGenerator = new ScriptLayerGenerator(type, scriptHeader);
                 cSharpLayerGenerator.Run();
                 scriptLayerGenerator.Run();
                 scriptPaths.Add(scriptLayerGenerator.Path.Replace("//", "/"));
@@ -30,7 +30,7 @@ namespace Kharynic.Engine.Scripting
             var list = 
                 GeneratorUtils.GetHeaderComment() + "\n" +
                 string.Join("\n", paths) + "\n";
-            const string path = "scripts/filelist.generated.txt";
+            const string path = "WebHost/filelist.generated.txt";
             GeneratorUtils.WriteFile(list, path);
         }
 

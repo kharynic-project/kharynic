@@ -12,14 +12,11 @@ namespace Kharynic.Engine.Scripting
     {
         public const string GeneratedInterfaceSuffix = "_generated";
 
-        public CSharpLayerGenerator(Type targetType, string rootNamespace) 
-            : base(
-                targetType, 
-                rootNamespace)
+        public CSharpLayerGenerator(Type targetType) : base(targetType)
         {
         }
 
-        public override string Path => $"{base.Path.Replace("/Engine/", "/Engine/Assets/")}.cs";
+        public override string Path => GeneratorUtils.GetSourceFilePath(TargetType, "cs", isUnityAsset: true);
 
         protected override string GenerateCode()
         {

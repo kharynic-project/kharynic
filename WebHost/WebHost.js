@@ -1,4 +1,8 @@
-window.WebHost = {
+// this is main file loaded by the browser and executed starting with WebHost.Init
+
+window.Kharynic = window.Kharynic || {};
+
+Kharynic.WebHost = {
     Host: undefined,
     GameContainer: undefined,
     PlayerFrame: undefined,
@@ -37,7 +41,6 @@ window.WebHost = {
             var playerWindow = event.srcElement.contentWindow;
             WebHost.SecureRequests(playerWindow);
             // bridge namespaces
-            window.Kharynic = window.Kharynic || {};
             playerWindow.Kharynic = window.Kharynic;
             playerWindow.WebHost = WebHost;
             WebHost.GameContainer = WebHost.PlayerFrame.contentDocument.getElementById("gameContainer");
@@ -80,9 +83,9 @@ window.WebHost = {
         });
     },
     LoadScripts: function() {
-        this.LoadScript("/scripts/Scripts.js");
+        this.LoadScript("/WebHost/EngineInterface.js");
         this.LoadScript("/Engine/Scripting/Runtime.js");
-        this.LoadAllScripts("/scripts/filelist.generated.txt");
+        this.LoadAllScripts("/WebHost/filelist.generated.txt");
     },
     ShowWatermark: function() {
         var watermark = document.createElement("div");

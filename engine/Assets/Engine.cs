@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Kharynic.Engine.Scripting;
+using Kharynic.WebHost;
 
 namespace Kharynic.Engine
 {
@@ -26,10 +27,10 @@ namespace Kharynic.Engine
 			if (args.Any(a => !string.IsNullOrWhiteSpace(a)))
 				Debug.Log($"args: {string.Join(" ", args)}");
 			CoroutineManager.Start();
-			Debug.Log($"loading game from {Scripts.GetRootUrl()}");
+			Debug.Log($"loading game from {EngineInterface.GetRootUrl()}");
 			// todo: specify loading order. OnLoad needs to be called before RegisterAll, 
 			// as it's needed to signal that emscripten module is ready to use.
-			Scripts.OnLoad();
+			EngineInterface.OnLoad();
 			Runtime.RegisterAll(GetType().Assembly);
 		}
 

@@ -3,12 +3,8 @@
 
 // *********************
 //       Externals
-//  Phoenix V0.0.72+947
+//  Phoenix V0.0.74+59a
 // *********************
-
-/*
-#if FALSE
-*/
 
 window.Kharynic = window.Kharynic || {};
 Kharynic.Engine = Kharynic.Engine || {};
@@ -47,7 +43,3 @@ Kharynic.Engine.ScriptingInterface = class
         return result;
     }
 }
-
-/*
-#endif
-*/

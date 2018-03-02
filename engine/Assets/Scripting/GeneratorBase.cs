@@ -13,27 +13,22 @@ namespace Kharynic.Engine.Scripting
         protected virtual bool ProtectEditor => true;
         protected readonly Type TargetType;
         protected readonly IEnumerable<MethodInfo> Methods;
-        private readonly string _rootNamespace;
-        
+
         public void Run()
         {
             var code = GenerateCode();
             GeneratorUtils.WriteFile(code, Path, ProtectEditor);
         }
 
-        protected GeneratorBase(Type targetType, string rootNamespace)
+        protected GeneratorBase(Type targetType)
         {
             TargetType = targetType;
-            _rootNamespace = rootNamespace;
             Methods = targetType
                 .GetMethods()
                 .Where(m => m.GetCustomAttribute<ScriptableAttribute>() != null);
         }
 
-        public virtual string Path =>
-            new Regex($"^{_rootNamespace}")
-                .Replace(TargetType.Namespace ?? "", "")
-                .Replace(".", "/") + $"/{TargetType.Name}.generated";
+        public abstract string Path { get; }
 
         protected abstract string GenerateCode();
     }

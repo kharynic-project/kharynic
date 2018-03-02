@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using Kharynic.WebHost;
 
 namespace Kharynic.Engine
 {
@@ -33,7 +34,7 @@ namespace Kharynic.Engine
                 UnityEngine.Debug.Log(message);
                 File.AppendAllText(LogFile, $"{message}\n");
             #else
-                Scripts.Log(message);
+                EngineInterface.Log(message);
             #endif
         }
 
