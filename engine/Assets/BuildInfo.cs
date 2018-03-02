@@ -40,7 +40,7 @@ namespace Kharynic.Engine
             Until(GetSourceFilePath().Replace('\\', '/'), RelativeEngineAssetsPath);
 
         public static string RelativeEngineAssetsPath = "/Engine/Assets";
-        public static readonly string RootNamespace = typeof(Engine).Namespace;
+        public static readonly string RootNamespace = "Kharynic";
 
         
         

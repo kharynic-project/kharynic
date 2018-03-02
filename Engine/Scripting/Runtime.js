@@ -2,7 +2,6 @@ window.Kharynic = window.Kharynic || {};
 Kharynic.Engine = Kharynic.Engine || {};
 Kharynic.Engine.Scripting = Kharynic.Engine.Scripting || {};
 
-// This class has C# part (/Engine/Assets/Scripting/Runtime.cs).
 Kharynic.Engine.Scripting.Runtime = class
 {
     static Init(emscriptenModule)

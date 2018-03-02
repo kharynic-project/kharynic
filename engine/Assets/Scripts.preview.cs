@@ -4,7 +4,7 @@ using System;
 
 namespace Kharynic.Engine
 {
-    // Code generated on 2018.03.01 by /Engine/Assets/Editor/Scripts.Generator.cs - DO NOT EDIT.
+    // Code generated on 2018.03.02 by /Engine/Assets/Editor/Scripts.Generator.cs - DO NOT EDIT.
     // this file is used by editor preview which cannot regenerate it, so it has to be commited
     public static class Scripts
     {

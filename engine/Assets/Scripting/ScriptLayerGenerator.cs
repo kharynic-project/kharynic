@@ -20,14 +20,15 @@ namespace Kharynic.Engine.Scripting
             
         }
 
-        public override string Path => $"/scripts/{base.Path}.js";
+        public override string Path => $"{base.Path}.js";
 
         protected override string GenerateCode()
         {
             var @namespace = TargetType.Namespace != null ? (TargetType.Namespace + ".") : "";
             var header =
                 GeneratorUtils.GetHeaderComment() + "\n" +
-                (_scriptHeader ?? "") + "\n" +
+                (_scriptHeader ?? "") + "\n\n" +
+                "/*\n#if FALSE\n*/\n\n" +
                 GetScriptNamespaceDeclarations() + "\n\n" +
                 $"{@namespace}{TargetType.Name} = class\n" +
                 $"{{\n";
@@ -37,7 +38,8 @@ namespace Kharynic.Engine.Scripting
                 $"        this.{ThisPtrVar} = {ThisPtrVar};\n" + 
                 $"    }}\n\n";
             var footer =
-                $"}}\n";
+                $"}}\n\n" +
+                $"/*\n#endif\n*/\n";
             return
                 header +
                 constructor +

@@ -19,14 +19,14 @@ namespace Kharynic.Engine.Scripting
         {
         }
 
-        public override string Path => $"{BuildInfo.RelativeEngineAssetsPath}/{base.Path}.cs";
+        public override string Path => $"{base.Path.Replace("/Engine/", "/Engine/Assets/")}.cs";
 
         protected override string GenerateCode()
         {
             var header =
+                $"{GeneratorUtils.GetHeaderComment()}\n" +
                 $"namespace {TargetType.Namespace}\n" +
                 $"{{\n" +
-                $"    {GeneratorUtils.GetHeaderComment()}\n" +
                 $"    [{typeof(GeneratedInterfaceAttribute).FullName}]\n" +
                 $"    public static class {TargetType.Name}{GeneratedInterfaceSuffix}\n" +
                 $"    {{\n";

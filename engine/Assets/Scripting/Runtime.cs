@@ -9,7 +9,6 @@ namespace Kharynic.Engine.Scripting
 {
     // Use this class to gather runtime method data from generated code and pass it to scripts.
     // They already have generated wrappers, but function pointers are needed to run them.
-    // This class has JavaScript part (/scripts/Engine/Scripting/Runtime.js).
     public static class Runtime
     {
         private const BindingFlags MethodBindingFlags = BindingFlags.Public |

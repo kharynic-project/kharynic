@@ -81,7 +81,7 @@ window.WebHost = {
     },
     LoadScripts: function() {
         this.LoadScript("/scripts/Scripts.js");
-        this.LoadScript("/scripts/Engine/Scripting/Runtime.js");
+        this.LoadScript("/Engine/Scripting/Runtime.js");
         this.LoadAllScripts("/scripts/filelist.generated.txt");
     },
     ShowWatermark: function() {

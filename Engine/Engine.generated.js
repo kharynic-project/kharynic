@@ -1,11 +1,14 @@
-// Code generated on 2018.03.01 by /Engine/Assets/Scripting/ScriptLayerGenerator.cs - DO NOT EDIT.
+// Code generated on 2018.03.02 by /Engine/Assets/Scripting/ScriptLayerGenerator.cs - DO NOT EDIT.
 // this file is used by scripts which cannot regenerate it, so it has to be commited
 
 // *********************
 //       Externals
-//  Phoenix V0.0.73+a0a_preview
+//  Phoenix V0.0.72+947
 // *********************
 
+/*
+#if FALSE
+*/
 
 window.Kharynic = window.Kharynic || {};
 Kharynic.Engine = Kharynic.Engine || {};
@@ -27,3 +30,7 @@ Kharynic.Engine.Engine = class
         return result;
     }
 }
+
+/*
+#endif
+*/
