@@ -6,7 +6,7 @@ body {
 }
 
 #Splash {
-    background-image: url(../images/background.jpg);
+    background-image: url(/resources/images/background.jpg);
     background-size: cover;
     background-position: center;
 }

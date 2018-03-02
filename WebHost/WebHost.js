@@ -12,7 +12,7 @@ window.WebHost = {
         this.Maximize(this.Splash);
         var unityLogo = document.createElement("img");
         unityLogo.id = "unityLogo";
-        unityLogo.src = "resources/images/unity.png";
+        unityLogo.src = "/resources/images/unity.png";
         this.Splash.appendChild(unityLogo);
         this.Host.appendChild(this.Splash);
     },
@@ -32,7 +32,7 @@ window.WebHost = {
     CreatePlayer: function() {
         this.PlayerFrame = document.createElement("iframe");
         this.PlayerFrame.id = "PlayerFrame";
-        this.PlayerFrame.src = "bin/index.html";
+        this.PlayerFrame.src = "/bin/index.html";
         this.PlayerFrame.onload = function(event) {
             var playerWindow = event.srcElement.contentWindow;
             WebHost.SecureRequests(playerWindow);
@@ -89,7 +89,7 @@ window.WebHost = {
         watermark.id = "watermark";
         watermark.textContent = "github.com/kharynic-project\nDeveloper preview - not playable yet";
         this.Host.appendChild(watermark);
-        var engineVersionUrl = "../engine/Assets/Editor/BuildInfo.Version.txt";
+        var engineVersionUrl = "/Engine/Assets/Editor/BuildInfo.Version.txt";
         fetch(engineVersionUrl).then(function(response) {
             response.text().then(function(version) {
                 watermark.textContent = "Kharynic Engine v" + version + "\n" + watermark.textContent;
