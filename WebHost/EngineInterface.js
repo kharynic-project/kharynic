@@ -9,9 +9,9 @@ Kharynic.WebHost.EngineInterface =
 
     OnLoad: function () /*: void*/
     {
-        window.WebHost.OnLoad();
-        Kharynic.Engine.Scripting.Runtime.Init(window.WebHost.Player.Module);
-        window.WebHost.HideSplash();
+        Kharynic.WebHost.OnLoad();
+        Kharynic.Engine.Scripting.Runtime.Init(Kharynic.WebHost.Player.Module);
+        Kharynic.WebHost.HideSplash();
     },
 
     Execute: function (code /*: string*/) /*: void*/
@@ -26,7 +26,7 @@ Kharynic.WebHost.EngineInterface =
 
     RegisterExternal: function(name /*: string*/, functionPtr /*: IntPtr*/) /*: void*/
     {
-        window.WebHost.Scripts.Externals[name] = functionPtr;
+        Kharynic.WebHost.Scripts.Externals[name] = functionPtr;
     },
 
     GetRootUrl: function() /*: string*/

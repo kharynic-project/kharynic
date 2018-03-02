@@ -39,24 +39,23 @@ Kharynic.WebHost = {
         this.PlayerFrame.src = "/bin/index.html";
         this.PlayerFrame.onload = function(event) {
             var playerWindow = event.srcElement.contentWindow;
-            WebHost.SecureRequests(playerWindow);
+            Kharynic.WebHost.SecureRequests(playerWindow);
             // bridge namespaces
             playerWindow.Kharynic = window.Kharynic;
-            playerWindow.WebHost = WebHost;
-            WebHost.GameContainer = WebHost.PlayerFrame.contentDocument.getElementById("gameContainer");
+            Kharynic.WebHost.GameContainer = Kharynic.WebHost.PlayerFrame.contentDocument.getElementById("gameContainer");
         }
         this.PlayerFrame.style.opacity = 0;
         this.Host.appendChild(this.PlayerFrame);
     },
     RequestFullscreen: function () {
-        var host = window.WebHost.Host;
+        var host = Kharynic.WebHost.Host;
         host.requestFullscreen = 
             host.requestFullscreen ||
             host.mozRequestFullScreen ||
             host.webkitRequestFullScreen ||
             host.msRequestFullscreen ||
             function(){};
-        var canvas = window.WebHost.PlayerCanvas;
+        var canvas = Kharynic.WebHost.PlayerCanvas;
         canvas.requestPointerLock = 
             canvas.requestPointerLock ||
             canvas.mozRequestPointerLock ||
@@ -125,7 +124,7 @@ Kharynic.WebHost = {
         this.Maximize(this.GameContainer);
         this.PlayerCanvas = this.GameContainer.getElementsByTagName("canvas")[0];
         this.Maximize(this.PlayerCanvas);
-        this.Host.onresize = function () { WebHost.Maximize(WebHost.PlayerCanvas); };
+        this.Host.onresize = function () { Kharynic.WebHost.Maximize(Kharynic.WebHost.PlayerCanvas); };
         this.HideSplash();
         this.PlayerCanvas.addEventListener("click", this.RequestFullscreen);
     }
