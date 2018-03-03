@@ -4,30 +4,34 @@ shopt -s globstar
 cd $( dirname "${BASH_SOURCE[0]}" )/..
 pwd
 echo
-rm -r engine/Temp
-rm -r engine/obj
-rm -r engine/Library
-rm -r engine/UnityPackageManager
-rm    engine/Assets/**/*.meta
-rm    engine/ProjectSettings/AudioManager.asset
-rm    engine/ProjectSettings/ClusterInputManager.asset
-rm    engine/ProjectSettings/DynamicsManager.asset
-rm    engine/ProjectSettings/EditorBuildSettings.asset
-rm    engine/ProjectSettings/InputManager.asset
-rm    engine/ProjectSettings/NavMeshAreas.asset
-rm    engine/ProjectSettings/NetworkManager.asset
-rm    engine/ProjectSettings/Physics2DSettings.asset
-rm    engine/ProjectSettings/TagManager.asset
-rm    engine/ProjectSettings/TimeManager.asset
-rm    engine/ProjectSettings/UnityConnectSettings.asset
-rm    engine/Assembly-CSharp.csproj
-rm    engine/Assembly-CSharp-Editor.csproj
-rm    engine/Assembly-CSharp-Editor-firstpass.csproj
-rm    engine/engine.sln
+rm -r Engine/Temp
+rm -r Engine/obj
+rm -r Engine/Library
+rm -r Engine/UnityPackageManager
+rm    Engine/Assets/**/*.meta
+rm    Engine/ProjectSettings/AudioManager.asset
+rm    Engine/ProjectSettings/ClusterInputManager.asset
+rm    Engine/ProjectSettings/DynamicsManager.asset
+rm    Engine/ProjectSettings/EditorBuildSettings.asset
+rm    Engine/ProjectSettings/InputManager.asset
+rm    Engine/ProjectSettings/NavMeshAreas.asset
+rm    Engine/ProjectSettings/NetworkManager.asset
+rm    Engine/ProjectSettings/Physics2DSettings.asset
+rm    Engine/ProjectSettings/TagManager.asset
+rm    Engine/ProjectSettings/TimeManager.asset
+rm    Engine/ProjectSettings/UnityConnectSettings.asset
+rm    Engine/Assembly-CSharp.csproj
+rm    Engine/Assembly-CSharp-Editor.csproj
+rm    Engine/Assembly-CSharp-Editor-firstpass.csproj
+rm    Engine/engine.sln
+rm    Engine/Assets/*.generated.*
+rm    Engine/Assets/Plugins/*.generated.*
 
-rm -r engine/.vscode
-rm -r engine/.idea
-rm    engine/Assets/Plugins/Editor/JetBrains
+rm -r Engine/.vscode
+rm -r Engine/.idea
+rm -r Engine/Assets/Plugins/Editor/JetBrains
+
+rm    Engine/Debug.log
 echo
 echo finished
 sleep 1

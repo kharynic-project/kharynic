@@ -16,7 +16,7 @@ namespace Kharynic.Engine.Scripting
             return $"// Code generated on {DateTime.Now:yyyy.MM.dd} by {relativePath} - DO NOT EDIT.";
         }
 
-        private static string ToAbsolutePath(string projectRelativePath)
+        public static string ToAbsolutePath(string projectRelativePath)
         {
             var path = BuildInfo.LocalProjectPath + "/" + projectRelativePath;
             path = Regex.Replace(path, "[\\/]+", "/");
@@ -51,9 +51,12 @@ namespace Kharynic.Engine.Scripting
             var relativeName = new Regex($"^{BuildInfo.RootNamespace}\\.").Replace(qualifiedName, "");
             var path = $"/{relativeName.Replace(".", "/")}.{(isGenerated ? "generated." : "")}{extension}";
             if (isUnityAsset)
-                path = new Regex($"^/Engine/").Replace(path, "/Engine/Assets/");
-            if (path.Contains("//"))
-                Debug.Log("path.Contains(\"//\")");
+            {
+                if (path.StartsWith("/Engine/"))
+                    path = new Regex($"^/Engine/").Replace(path, BuildInfo.RelativeEngineAssetsPath + "/");
+                else
+                    path = BuildInfo.RelativeEngineAssetsPath + path;
+            }
             return path;
         }
     }

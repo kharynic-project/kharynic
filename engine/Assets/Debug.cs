@@ -4,13 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
-using Kharynic.WebHost;
+using Kharynic.Engine.Scripting;
+#if !UNITY_EDITOR
+    using Kharynic.WebHost;
+#endif
 
 namespace Kharynic.Engine
 {
     public static class Debug
     {
-        private static readonly string LogFile = UnityEngine.Application.dataPath + "/debug.log";
+        private static readonly string LogFile = GeneratorUtils.ToAbsolutePath(GeneratorUtils.GetSourceFilePath(
+            typeof(Debug), "log", isUnityAsset: false, isGenerated: false));
         
         private static readonly char[] PathSeparators = {'/','\\'};
         
