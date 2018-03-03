@@ -5,6 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace Kharynic.Engine.Scripting
 {
+    // This is the only class allowed to work on filesystem-absolute paths.
+    // All the others have to use this one in order to prevent accidental access
+    // to files outside the project during build process.
     public static class GeneratorUtils
     {
         public static string GetHeaderComment([CallerFilePath] string callerFilePath = "<unknown>")

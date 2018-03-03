@@ -21,11 +21,6 @@ namespace Kharynic.Engine
 
         private static Version ReadLast()
         {
-            if (!File.Exists(FilePath))
-            {
-                Debug.Log($"WARNING: {FilePath} not found - resetting version number");
-                Write(new Version());
-            }
             var file = GeneratorUtils.ReadFile(FilePath).Split('.', '+').ToArray();
             return new Version
             {
