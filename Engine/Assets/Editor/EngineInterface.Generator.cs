@@ -72,11 +72,11 @@ namespace Kharynic.Engine.Editor
             private static void GenerateExternImportStubs(IEnumerable<Function> functions)
             {
                 var code = new StringBuilder(
+                    $"{GeneratorUtils.GetHeaderComment()}\n\n" +
                     $"using {typeof(IntPtr).Namespace};\n" +
                     $"using {typeof(DllImportAttribute).Namespace};\n\n" +
                     $"namespace {typeof(WebHost.EngineInterface).Namespace}\n" +
                     $"{{\n" +
-                    $"    {GeneratorUtils.GetHeaderComment()}\n" +
                     $"    public static class {nameof(WebHost.EngineInterface)}\n" +
                     $"    {{\n" +
                     $"        public const bool Enabled = true;\n\n");
