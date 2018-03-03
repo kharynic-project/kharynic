@@ -36,25 +36,13 @@ namespace Kharynic.Engine.Editor
                 //TODO: explore usages of EditorUtility.CompileCSharp()
             }
 
-            private static string IncrementBuildNumberAndGetVersion()
-            {
-                var filePath = Application.dataPath + $"/Editor/{nameof(BuildInfo)}.Version.txt";
 
-                // major.minor.build+hash
-                var version = File.ReadAllText(filePath).Split('.', '+').ToArray();
-                version[2] = (int.Parse(version[2]) + 1).ToString();
-                version[3] = Guid.NewGuid().GetHashCode().ToString("x8").Substring(0, 3);
-                var versionString = $"{version[0]}.{version[1]}.{version[2]}+{version[3]}";
-                Kharynic.Engine.BuildInfo.Version = versionString;
-                File.WriteAllText(filePath, versionString);
-                return versionString;
-            }
 
 
             private static void Generate(StringBuilder code, BuildTarget target)
             {
                 var buildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
-                var buildNumber = IncrementBuildNumberAndGetVersion();
+                var buildNumber = Version.IncrementAndGet().ToString();
                 var fields = new Dictionary<string, string>
                 {
                     {"Platform", target.ToString()},

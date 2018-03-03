@@ -82,8 +82,7 @@ Kharynic.WebHost = {
         });
     },
     LoadScripts: function() {
-        this.LoadScript("/WebHost/EngineInterface.js");
-        this.LoadScript("/Engine/Scripting/Runtime.js");
+        this.LoadAllScripts("/WebHost/filelist.txt");
         this.LoadAllScripts("/WebHost/filelist.generated.txt");
     },
     ShowWatermark: function() {
@@ -91,7 +90,7 @@ Kharynic.WebHost = {
         watermark.id = "watermark";
         watermark.textContent = "github.com/kharynic-project\nDeveloper preview - not playable yet";
         this.Host.appendChild(watermark);
-        var engineVersionUrl = "/Engine/Assets/Editor/BuildInfo.Version.txt";
+        var engineVersionUrl = "/Engine/Version.txt";
         fetch(engineVersionUrl).then(function(response) {
             response.text().then(function(version) {
                 watermark.textContent = "Kharynic Engine v" + version + "\n" + watermark.textContent;

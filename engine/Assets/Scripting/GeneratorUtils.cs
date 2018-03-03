@@ -13,7 +13,13 @@ namespace Kharynic.Engine.Scripting
             return $"// Code generated on {DateTime.Now:yyyy.MM.dd} by {relativePath} - DO NOT EDIT.";
         }
 
-        // TODO: assert that path starts with / (is project-absolute)
+        private static string ToAbsolutePath(string projectRelativePath)
+        {
+            var path = BuildInfo.LocalProjectPath + "/" + projectRelativePath;
+            path = Regex.Replace(path, "[\\/]+", "/");
+            return path;
+        }
+
         public static void WriteFile(string code, string path, bool protectEditor = true)
         {
             if (!path.EndsWith(".cs", StringComparison.InvariantCultureIgnoreCase))
@@ -21,7 +27,7 @@ namespace Kharynic.Engine.Scripting
             // generated code cannot be used in editor-mode, or re-generation may fail
             if (protectEditor)
                 code = "#if !UNITY_EDITOR\n\n" + code + "\n#endif\n";
-            path = (BuildInfo.LocalProjectPath + "/" + path).Replace("//", "/");
+            path = ToAbsolutePath(path);
             var directoryPath = Path.GetDirectoryName(path);
             System.Diagnostics.Debug.Assert(directoryPath != null);
             Directory.CreateDirectory(directoryPath);
@@ -31,17 +37,20 @@ namespace Kharynic.Engine.Scripting
 
         public static string ReadFile(string path)
         {
-            path = (BuildInfo.LocalProjectPath + "/" + path).Replace("//", "/");
+            path = ToAbsolutePath(path);
             return File.ReadAllText(Path.Combine(UnityEngine.Application.dataPath, path));
         }
 
+        // returns path relative to project root (suitabe for WriteFile and ReadFile)
         public static string GetSourceFilePath(Type type, string extension, bool isUnityAsset = false, bool isGenerated = true)
         {
             var qualifiedName = $"{type.Namespace}.{type.Name}";
-            var relativeName = new Regex($"^{BuildInfo.RootNamespace}").Replace(qualifiedName, "");
+            var relativeName = new Regex($"^{BuildInfo.RootNamespace}\\.").Replace(qualifiedName, "");
             var path = $"/{relativeName.Replace(".", "/")}.{(isGenerated ? "generated." : "")}{extension}";
             if (isUnityAsset)
                 path = new Regex($"^/Engine/").Replace(path, "/Engine/Assets/");
+            if (path.Contains("//"))
+                Debug.Log("path.Contains(\"//\")");
             return path;
         }
     }
