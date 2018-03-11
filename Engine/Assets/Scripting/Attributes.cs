@@ -3,8 +3,7 @@
 namespace Kharynic.Engine.Scripting
 {
     // Used to mark method as accessible from scripts
-    // TODO: field / property support
-    [AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property)]
     public class ScriptableAttribute : Attribute
     {
         

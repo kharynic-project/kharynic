@@ -26,6 +26,10 @@ namespace Kharynic.Engine.Scripting
             Methods = targetType
                 .GetMethods()
                 .Where(m => m.GetCustomAttribute<ScriptableAttribute>() != null);
+            Methods = Methods.Concat(targetType
+                .GetProperties()
+                .Where(m => m.GetCustomAttribute<ScriptableAttribute>() != null)
+                .SelectMany(p => p.GetAccessors()));
         }
 
         public abstract string Path { get; }

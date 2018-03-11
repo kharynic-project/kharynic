@@ -48,7 +48,7 @@ namespace Kharynic.Engine.Scripting
             var @params = GetParams(method);
             var paramDeclarations = @params.Where(p => p.Name != ThisPtrVar).Select(p => $"{p.Name} /*: {p.Type.FullName}*/");
             var staticKeyword = method.IsStatic ? "static " : "";
-            var name = method.Name; //TODO? .Replace("get_", "get ").Replace("set_", "set ");
+            var name = method.Name.Replace("get_", "get ").Replace("set_", "set ");
             var header =
                 $"    {staticKeyword}{name}({string.Join(", ", paramDeclarations)}) /*: {method.ReturnType.FullName}*/\n" +
                 $"    {{\n";

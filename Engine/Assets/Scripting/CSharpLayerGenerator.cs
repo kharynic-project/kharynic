@@ -11,6 +11,7 @@ namespace Kharynic.Engine.Scripting
     internal class CSharpLayerGenerator : GeneratorBase
     {
         public const string GeneratedInterfaceSuffix = "_generated";
+        const string ThisRefVar = "thisRef";
 
         public CSharpLayerGenerator(Type targetType) : base(targetType)
         {
@@ -36,31 +37,36 @@ namespace Kharynic.Engine.Scripting
                 footer;
         }
 
+        private string GetReturnType(MethodInfo method)
+        {
+            if (method.ReturnType == typeof(void))
+                return "void"; // CS0673 fix
+            else if (method.ReturnType.IsPrimitive || method.ReturnType == typeof(string))
+                return method.ReturnType.FullName;
+            else
+                return typeof(IntPtr).FullName; // MarshalDirectiveException fix
+        }
+        
         private string GenerateMethodWrapper(MethodInfo method)
         {
             var @params = GetParams(method);
             var paramDeclarations = @params.Select(p => $"{p.Type.FullName} {p.Name}");
             var paramList = string.Join(", ", paramDeclarations);
-            var returnType = method.ReturnType == typeof(void) ? "void" : method.ReturnType.FullName; // CS0673 fix
+            var returnType = GetReturnType(method);
             var delegateDeclaration = 
                 $"        public delegate {returnType} {method.Name}{nameof(Delegate)}({paramList});\n";
             var header =
                 $"        [{typeof(AOT.MonoPInvokeCallbackAttribute).FullName}(typeof({method.Name}{nameof(Delegate)}))]\n" +
                 $"        public static {returnType} {method.Name}({paramList})\n" +
                 $"        {{\n";
-            const string thisRefVar = "thisRef";
             const string thisHandleVar = "thisHandle";
             var thisRefDeclaration = method.IsStatic ? "" :
                 $"            var {thisHandleVar} = {typeof(GCHandle).FullName}.{nameof(GCHandle.FromIntPtr)}({ThisPtrVar});\n" +
-                $"            var {thisRefVar} = ({TargetType.FullName}) {thisHandleVar}.{nameof(GCHandle.Target)};\n";
+                $"            var {ThisRefVar} = ({TargetType.FullName}) {thisHandleVar}.{nameof(GCHandle.Target)};\n";
             var stringParams = method.GetParameters().Where(p => p.ParameterType == typeof(string));
             var stringParamDeclarations = string.Join("", stringParams.Select(p =>
                 $"            var {p.Name} = {typeof(Marshal).FullName}.{nameof(Marshal.PtrToStringAuto)}({p.Name}{PtrSuffix});\n"));
-            var callSubject = method.IsStatic ? TargetType.FullName : thisRefVar;
-            var argsList = string.Join(", ", method.GetParameters().Select(p => p.Name));
-            var returnStatement = method.ReturnType != typeof(void) ? "return " : "";
-            var call =
-                $"            {returnStatement}{callSubject}.{method.Name}({argsList});\n";
+            var call = GetCallExpression(method);
             var footer = 
                 $"        }}\n";
             return
@@ -71,7 +77,45 @@ namespace Kharynic.Engine.Scripting
                 call + 
                 footer;
         }
-        
+
+        private string GetCallExpression(MethodInfo method)
+        {
+            const string getPrefix = "get_";
+            const string setPrefix = "set_";
+            var callSubject = method.IsStatic ? TargetType.FullName : ThisRefVar;
+            string call;
+            if (method.Name.StartsWith(getPrefix))
+                call =
+                    $"            return {callSubject}.{method.Name.Substring(getPrefix.Length)};\n";
+            else if (method.Name.StartsWith(setPrefix))
+            {
+                var valueParam = method.GetParameters().Select(p => p.Name).Single();
+                call =
+                    $"            {callSubject}.{method.Name.Substring(setPrefix.Length)} = {valueParam};\n";
+            }
+            else
+            {
+                var argsList = string.Join(", ", method.GetParameters().Select(p => p.Name));
+                call = $"{callSubject}.{method.Name}({argsList})";
+                if (method.ReturnType == typeof(void))
+                    call =
+                        $"            {call};\n";
+                else if (method.ReturnType.IsPrimitive || method.ReturnType == typeof(string))
+                    call =
+                        $"            return {call};\n";
+                else
+                {
+                    var handleType = $"{typeof(GCHandleType).FullName}.{nameof(GCHandleType.Normal)}";
+                    call =
+                        $"            var resultRef = {call};\n" +
+                        $"            var resultHandle = {typeof(GCHandle).FullName}.{nameof(GCHandle.Alloc)}(resultRef, {handleType});\n" +
+                        $"            var result = {typeof(GCHandle).FullName}.{nameof(GCHandle.ToIntPtr)}(resultHandle);\n" +
+                        $"            return result;\n";
+                }
+            }
+            return call; 
+        }
+
         // returns list of params with references changed to pointers and optional "this" pointer
         private static IEnumerable<VarInfo> GetParams(MethodBase method)
         {
