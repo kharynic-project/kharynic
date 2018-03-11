@@ -78,6 +78,7 @@ namespace Kharynic.Engine
                 message = $"ERROR: assertion failed: {message}";
                 Log(message, callerFilePath, callerLineNumber);
                 #if UNITY_EDITOR
+                    Debugger.Break();
                     UnityEngine.Debug.Break();
                 #endif
             }
