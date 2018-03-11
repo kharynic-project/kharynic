@@ -35,4 +35,4 @@ Kharynic.WebHost.EngineInterface =
     }
 };
 
-console.log("Scripts.js loaded");
+console.log("EngineInterface.js loaded");
