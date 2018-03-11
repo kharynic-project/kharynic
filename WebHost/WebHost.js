@@ -49,13 +49,15 @@ Kharynic.WebHost = {
     },
     RequestFullscreen: function () {
         var host = Kharynic.WebHost.Host;
+        var canvas = Kharynic.WebHost.PlayerCanvas;
+        if (host == undefined || canvas == undefined)
+            return;
         host.requestFullscreen = 
             host.requestFullscreen ||
             host.mozRequestFullScreen ||
             host.webkitRequestFullScreen ||
             host.msRequestFullscreen ||
             function(){};
-        var canvas = Kharynic.WebHost.PlayerCanvas;
         canvas.requestPointerLock = 
             canvas.requestPointerLock ||
             canvas.mozRequestPointerLock ||
