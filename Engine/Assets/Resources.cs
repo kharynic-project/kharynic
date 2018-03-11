@@ -13,10 +13,9 @@ namespace Kharynic.Engine
             var fileProtocol = BuildInfo.LocalProjectPath.Contains(":") ? "file:///" : "file://";
             return $"{fileProtocol}{BuildInfo.LocalProjectPath}";
         });
-
-        private static string GameUrl => LazyGameUrl.Value;
-
-        private static string ToUrl(string projectRelativePath) => $"{GameUrl}/{projectRelativePath}";
+        
+        private static string ToUrl(string projectRelativePath) 
+            => $"{LazyGameUrl.Value}/{projectRelativePath}";
 
         public static async Task<string> LoadText(string path)
         {
