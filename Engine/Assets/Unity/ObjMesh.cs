@@ -7,14 +7,14 @@ using UnityEngine;
 
 namespace Kharynic.Engine.Unity
 {
-    class ObjMesh
+    internal class ObjMesh
     {
         public List<Vector3> GeometryVertices { get; } = new List<Vector3>(); 
         public List<Vector2> TextureVertices { get; } = new List<Vector2>(); 
         public List<Vector3> VertexNormals { get; } = new List<Vector3>();
         public List<int?> VertexComponentIds { get; } = new List<int?>();
 		
-        private static Vector3 Parse3dCoords(string[] line)
+        private static Vector3 Parse3DCoords(string[] line)
         {
             var vector = new Vector3();
             for (var i = 0; i < 3; i++)
@@ -41,6 +41,7 @@ namespace Kharynic.Engine.Unity
                 .Select(l => l.Split(' '));
             foreach (var line in lines)
             {
+                await AsyncExtensions.WaitMoment();
                 var lineType = line[0];
                 switch (lineType)
                 {
@@ -51,13 +52,13 @@ namespace Kharynic.Engine.Unity
                         // ignore
                         break;
                     case "v": // geometric vertex: v 3.2e-3 -1.4e-10 -5.8e-2
-                        that.GeometryVertices.Add(Parse3dCoords(line));
+                        that.GeometryVertices.Add(Parse3DCoords(line));
                         break;
                     case "vt": // texture vertex: vt 0.2 0.7
                         that.TextureVertices.Add(ParseUvCoords(line));
                         break;
                     case "vn": // vertex normal: vn 0.9 -5.3e-9 -6.3e-2
-                        that.VertexNormals.Add(Parse3dCoords(line));
+                        that.VertexNormals.Add(Parse3DCoords(line));
                         break;
                     case "g": // group name: g Cylinder006_CA_MISC
                         // ignore
