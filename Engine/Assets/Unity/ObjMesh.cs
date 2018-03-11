@@ -12,7 +12,7 @@ namespace Kharynic.Engine.Unity
         public List<Vector3> GeometryVertices { get; } = new List<Vector3>(); 
         public List<Vector2> TextureVertices { get; } = new List<Vector2>(); 
         public List<Vector3> VertexNormals { get; } = new List<Vector3>();
-        public List<int> VertexComponentIds { get; } = new List<int>();
+        public List<int?> VertexComponentIds { get; } = new List<int?>();
 		
         private static Vector3 Parse3dCoords(string[] line)
         {
@@ -41,7 +41,6 @@ namespace Kharynic.Engine.Unity
                 .Select(l => l.Split(' '));
             foreach (var line in lines)
             {
-                await AsyncExtensions.WaitMoment();
                 var lineType = line[0];
                 switch (lineType)
                 {
@@ -74,8 +73,7 @@ namespace Kharynic.Engine.Unity
                         var indices = line
                             .Skip(1)
                             .SelectMany(entry => entry.Split('/'))
-                            // TODO: support missing entries? (s => s.Length > 0 ? (int.Parse(s) - 1) : (int?)null)
-                            .Select(s => int.Parse(s)-1)
+                            .Select(s => s.Length > 0 ? (int.Parse(s) - 1) : (int?)null)
                             .ToArray();
                         Debug.Assert(indices.Length == 9);
                         that.VertexComponentIds.AddRange(indices);
@@ -84,6 +82,7 @@ namespace Kharynic.Engine.Unity
                         throw new ArgumentException($"unsupported obj format entry: {line}", nameof(definition));
                 }
             }
+
             Debug.Assert(that.VertexComponentIds.Count % 9 == 0); // three vertices for geometry, tex and normals
             return that;
         }

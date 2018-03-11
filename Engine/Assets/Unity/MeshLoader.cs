@@ -16,6 +16,7 @@ namespace Kharynic.Engine.Unity
 	        {
 		        name = Path.GetFileNameWithoutExtension(path) ?? "object"
 	        };
+	        gameObject.transform.localScale = new Vector3(-1, 1, 1);
 	        var meshFilter = gameObject.AddComponent<MeshFilter>();
 	        meshFilter.mesh = await LoadMesh(path);
 			var meshRenderer = gameObject.AddComponent<MeshRenderer>();
@@ -32,8 +33,6 @@ namespace Kharynic.Engine.Unity
 		    var startTime = DateTime.Now;
 		    var objDef = await Resources.LoadText(path);
 		    var objMesh = await ObjMesh.Load(objDef);
-
-		    var vertices = new Dictionary<Tuple<int, int, int>, int>();
 		    
 		    var geometryVertices = new List<Vector3>();
 		    var textureVertices = new List<Vector2>();
@@ -42,21 +41,32 @@ namespace Kharynic.Engine.Unity
 		    
 		    for (var i = 0; i < objMesh.VertexComponentIds.Count; i+=3)
 		    {
+			    await AsyncExtensions.WaitMoment();
 			    var geomVertexId = objMesh.VertexComponentIds[i + 0];
 			    var texVertexId = objMesh.VertexComponentIds[i + 1];
 			    var vertexNormalId = objMesh.VertexComponentIds[i + 2];
+
+			    if (geomVertexId != null)
+			    {
+				    Debug.Assert(0 <= geomVertexId && geomVertexId < objMesh.GeometryVertices.Count);
+				    var geomVertex = objMesh.GeometryVertices[geomVertexId.Value];
+				    geometryVertices.Add(geomVertex);
+			    }
 			    
-			    Debug.Assert(0 <= geomVertexId && geomVertexId < objMesh.GeometryVertices.Count);
-			    Debug.Assert(0 <= texVertexId && texVertexId < objMesh.TextureVertices.Count);
-			    Debug.Assert(0 <= vertexNormalId && vertexNormalId < objMesh.VertexNormals.Count);
-			    
-			    var geomVertex = objMesh.GeometryVertices[geomVertexId];
-			    var texVertex = objMesh.TextureVertices[texVertexId];
-			    var vertexNormal = objMesh.VertexNormals[vertexNormalId];
-			    
-			    geometryVertices.Add(geomVertex);
-			    textureVertices.Add(texVertex);
-			    normalVertices.Add(vertexNormal);
+			    if (texVertexId != null)
+			    {
+				    Debug.Assert(0 <= texVertexId && texVertexId < objMesh.TextureVertices.Count);
+				    var texVertex = objMesh.TextureVertices[texVertexId.Value];
+				    textureVertices.Add(texVertex);
+			    }
+
+			    if (vertexNormalId != null)
+			    {
+				    Debug.Assert(0 <= vertexNormalId && vertexNormalId < objMesh.VertexNormals.Count);
+				    var vertexNormal = objMesh.VertexNormals[vertexNormalId.Value];
+				    normalVertices.Add(vertexNormal);
+			    }
+
 			    triangles.Add(i / 3);
 		    }
 			
