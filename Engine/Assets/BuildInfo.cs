@@ -36,8 +36,9 @@ namespace Kharynic.Engine
             #endif
         ;
         // this cannot use Path.DirectorySeparatorChar as it may differ between build platform and runtime platform
-        public static string LocalProjectPath => 
-            Until(GetSourceFilePath().Replace('\\', '/'), RelativeEngineAssetsPath);
+        private static readonly Lazy<string> LazyLocalProjectPath = new Lazy<string>(() =>
+            Until(GetSourceFilePath().Replace('\\', '/'), RelativeEngineAssetsPath));
+        public static string LocalProjectPath => LazyLocalProjectPath.Value;
 
         public static string RelativeEngineAssetsPath = "/Engine/Assets";
         public static readonly string RootNamespace = "Kharynic";
