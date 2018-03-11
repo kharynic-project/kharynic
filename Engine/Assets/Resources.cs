@@ -13,8 +13,6 @@ namespace Kharynic.Engine
             var fileProtocol = BuildInfo.LocalProjectPath.Contains(":") ? "file:///" : "file://";
             return $"{fileProtocol}{BuildInfo.LocalProjectPath}";
         });
-        
-        private static string ToUrl(string projectRelativePath) 
 
         public static async Task<string> LoadText(string pathOrUrl)
         {
