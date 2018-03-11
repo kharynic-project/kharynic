@@ -103,7 +103,7 @@ Kharynic.WebHost = {
         // mods/branches ran inside iframe can only use local requests
         var nativeOpen = window.XMLHttpRequest.prototype.open;
         window.XMLHttpRequest.prototype.open = function(method, url) {
-            if (url.indexOf("//") > 0) {
+            if (url.indexOf("//") > 0 && !url.startsWith(document.location.origin + "/")) {
                 url = document.location.origin + "/blocked?" + encodeURIComponent(url);
                 this.send = function() { };
             }
