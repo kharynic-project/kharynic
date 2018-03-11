@@ -133,14 +133,7 @@ namespace Kharynic.Engine
                 .AddComponent<CoroutineManagerUnityHost>();
             Debug.Log($"{nameof(CoroutineManager)}.{nameof(Start)}");
         }
-
-        [Obsolete(message:"use await or universal coroutines instead")]
-        public void StartUnityCoroutine(IEnumerator routine, string name)
-        {
-            Debug.Log($"{nameof(CoroutineManager)}.{nameof(StartUnityCoroutine)}({name})");
-            _unityHost.StartCoroutine(routine);
-        }
-
+        
         public Coroutine StartCoroutine(Func<bool> loop, string name = null, TimeSpan? interval = null, bool autoRestart = false)
         {
             var coroutine = new Coroutine(loop, name, interval, autoRestart);
