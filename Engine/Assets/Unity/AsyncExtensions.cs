@@ -7,10 +7,12 @@ namespace Kharynic.Engine.Unity
 {
     public static class AsyncExtensions
     {
+        public const float MinimumTargetFps = 30f;
         public static IAwaitable WaitAsync(this IEnumerator enumerator) 
             => new Awaitable(new EnumeratorAwaiter(enumerator));
         
-        
+        public static IAwaitable WaitMoment() 
+            => new Awaitable(new MomentAwaiter());
         
         // members recognized by compiler
         public interface IAwaitable
@@ -51,10 +53,28 @@ namespace Kharynic.Engine.Unity
                 yield return enumerator;
                 continuation();
             }
+            
+            private static IEnumerator CreateActionWrapper(Action continuation)
+            {
+                yield return null;
+                const float maxDeltaTime = 1f / MinimumTargetFps;
+                while (Time.smoothDeltaTime > maxDeltaTime && UnityEngine.Random.value > 0.1)
+                {
+                    var waitingTime = Time.smoothDeltaTime * 2;
+                    Debug.Log($"framerate below min ({1/Time.smoothDeltaTime}fps), logic paused for {waitingTime}s");
+                    yield return new WaitForSecondsRealtime(waitingTime);
+                }
+                continuation();
+            }
 
             public void Run(IEnumerator enumerator, Action continuation)
             {
                 StartCoroutine(CreateEnumeratorWrapper(enumerator, continuation));
+            }
+
+            public void Run(Action continuation)
+            {
+                StartCoroutine(CreateActionWrapper(continuation));
             }
         }
         
@@ -78,6 +98,17 @@ namespace Kharynic.Engine.Unity
             public bool IsCompleted => false;
 
             // actually makes no sense
+            public void GetResult() { }
+        }
+
+        private class MomentAwaiter : IAwaiter
+        {
+            public void OnCompleted(Action continuation)
+            {
+                AsyncEnumeratorRunner.Instance.Value.Run(continuation);
+            }
+
+            public bool IsCompleted => false;
             public void GetResult() { }
         }
     }
