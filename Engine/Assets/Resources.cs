@@ -15,13 +15,13 @@ namespace Kharynic.Engine
         });
         
         private static string ToUrl(string projectRelativePath) 
-            => $"{LazyGameUrl.Value}/{projectRelativePath}";
 
-        public static async Task<string> LoadText(string path)
+        public static async Task<string> LoadText(string pathOrUrl)
         {
-            using (var www = new UnityEngine.WWW(ToUrl(path)))
+            var url = pathOrUrl.Contains("://") ? pathOrUrl : $"{LazyGameUrl.Value}/{pathOrUrl}";
+            using (var www = new UnityEngine.WWW(url))
             {
-                await www;
+                await www.WaitAsync();
                 if (!string.IsNullOrEmpty(www.error) || string.IsNullOrEmpty(www.text))
                     throw new WebException(www.error);
                 return www.text;
