@@ -51,7 +51,7 @@ namespace Kharynic.Engine.Unity
         {
             var lastFrameCount = 0;
             var lastTotalTime = 0f;
-            Engine.Instance.StartCoroutine(() =>
+            Engine.Instance.CoroutineManager.StartCoroutine(() =>
             {
                 var frameCount = Time.frameCount;
                 var totalTime = Time.realtimeSinceStartup;

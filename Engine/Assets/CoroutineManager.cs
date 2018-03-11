@@ -7,6 +7,7 @@ namespace Kharynic.Engine
 {
     public class CoroutineManager : IDisposable
     {
+        public static TimeSpan? MinimumInterval { get; set; } = null;
         private readonly List<Coroutine> _coroutines = new List<Coroutine>();
         private CoroutineManagerUnityHost _unityHost;
 
@@ -17,14 +18,14 @@ namespace Kharynic.Engine
             public string Name { get; }
             public TimeSpan? Interval { get; }
             public bool AutoRestart { get; }
-            public Action Loop { get; }
+            public Func<bool> Loop { get; }
             public bool Suspended { get; set; }
             private CoroutineManager _manager;
             private UnityEngine.Coroutine _coroutine;
 
             public Coroutine(
-                Action loop, 
-                string name, 
+                Func<bool> loop, 
+                string name = null, 
                 TimeSpan? interval = null,
                 bool autoRestart = false)
             {
@@ -32,6 +33,16 @@ namespace Kharynic.Engine
                 Loop = loop;
                 Interval = interval;
                 AutoRestart = autoRestart;
+            }
+
+            public Coroutine(
+                string name, 
+                CoroutineManager manager,
+                UnityEngine.Coroutine coroutine)
+            {
+                Name = name;
+                _manager = manager;
+                _coroutine = coroutine;
             }
 
             public void Start(CoroutineManager coroutineManager)
@@ -43,8 +54,15 @@ namespace Kharynic.Engine
                 _manager = coroutineManager;
                 var enumerator = CreateEnumerator();
                 _coroutine = _manager._unityHost.StartCoroutine(enumerator);
-                Debug.Log($"{nameof(Coroutine)}.{nameof(Start)}({Name})");
+                if (Name != null)
+                    Debug.Log($"{nameof(Coroutine)}.{nameof(Start)}({Name})");
                 _manager._coroutines.Add(this);
+            }
+
+            private TimeSpan? Max(TimeSpan? a, TimeSpan? b)
+            {
+                return (a == b || a > b) ? a : b;
+
             }
 
             private IEnumerator CreateEnumerator()
@@ -53,15 +71,14 @@ namespace Kharynic.Engine
                 {
                     if (Suspended)
                         yield return null;
+                    var @continue = false;
                     try
                     {
-                        Loop();
+                        @continue = Loop();
                     }
                     catch (TaskCanceledException)
                     {
-                        Debug.Log($"Coroutine finished: {Name}");
-                        _manager._coroutines.Remove(this);
-                        yield break;
+                        @continue = false;
                     }
                     catch (Exception e)
                     {
@@ -72,8 +89,16 @@ namespace Kharynic.Engine
                             yield break;
                         }
                     }
-                    if (Interval != null)
-                        yield return new UnityEngine.WaitForSeconds((float) Interval.Value.TotalSeconds);
+                    if (!@continue)
+                    {
+                        if (Name != null)
+                            Debug.Log($"Coroutine finished: {Name}");
+                        _manager._coroutines.Remove(this);
+                        yield break;
+                    }
+                    var interval = Max(Interval, MinimumInterval);
+                    if (interval != null)
+                        yield return new UnityEngine.WaitForSeconds((float) interval.Value.TotalSeconds);
                     else
                         yield return null;
                 }
@@ -107,6 +132,26 @@ namespace Kharynic.Engine
             _unityHost = new UnityEngine.GameObject(nameof(CoroutineManager))
                 .AddComponent<CoroutineManagerUnityHost>();
             Debug.Log($"{nameof(CoroutineManager)}.{nameof(Start)}");
+        }
+
+        [Obsolete(message:"use await or universal coroutines instead")]
+        public void StartUnityCoroutine(IEnumerator routine, string name)
+        {
+            Debug.Log($"{nameof(CoroutineManager)}.{nameof(StartUnityCoroutine)}({name})");
+            _unityHost.StartCoroutine(routine);
+        }
+
+        public Coroutine StartCoroutine(Func<bool> loop, string name = null, TimeSpan? interval = null, bool autoRestart = false)
+        {
+            var coroutine = new Coroutine(loop, name, interval, autoRestart);
+            coroutine.Start(this);
+            return coroutine;
+        }
+
+        public Coroutine StartCoroutine(Action infiniteLoop, string name = null, TimeSpan? interval = null, bool autoRestart = false)
+        {
+            var loopWrapper = new Func<bool>(() => { infiniteLoop(); return true; });
+            return StartCoroutine(loopWrapper, name, interval, autoRestart);
         }
 
         public void Dispose()

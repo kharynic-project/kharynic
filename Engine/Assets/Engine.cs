@@ -9,8 +9,8 @@ namespace Kharynic.Engine
 	{
 		public static Engine Instance { get; } = new Engine();
 		public TimeSpan RunningTime => DateTime.Now - _startupTime;
-		private CoroutineManager CoroutineManager { get; }
-		private DateTime _startupTime;
+		public CoroutineManager CoroutineManager { get; }
+		private readonly DateTime _startupTime;
 		public bool DebugMode { get; set; } = true;
 		private ScriptingInterface _scriptingInterface;
 
@@ -21,7 +21,7 @@ namespace Kharynic.Engine
 			_scriptingInterface = new ScriptingInterface(this);
 		}
 
-		public void Main(string[] args)
+		public async void Main(string[] args)
 		{
 			LogBuildInfo();
 			if (args.Any(a => !string.IsNullOrWhiteSpace(a)))
@@ -39,17 +39,6 @@ namespace Kharynic.Engine
 			Debug.Log($"{nameof(Engine)}.{nameof(Dispose)}");
 			CoroutineManager.Dispose();
 			Debug.Log("engine shutdown");
-		}
-		
-		public CoroutineManager.Coroutine StartCoroutine(
-			Action loop,
-			string name,
-			TimeSpan? interval = null,
-			bool autoRestart = false)
-		{
-			var coroutine = new CoroutineManager.Coroutine(loop, name, interval, autoRestart);
-			coroutine.Start(CoroutineManager);
-			return coroutine;
 		}
 
 		private static void LogBuildInfo()

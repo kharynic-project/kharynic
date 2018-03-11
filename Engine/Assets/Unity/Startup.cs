@@ -7,7 +7,7 @@ namespace Kharynic.Engine.Unity
     public class Startup : MonoBehaviour
     {
         private UnityEngine.Camera _camera;
-        private Engine _engine = Engine.Instance; //TODO: refactor? 
+        private readonly Engine _engine = Engine.Instance; //TODO: refactor? 
         
         [RuntimeInitializeOnLoadMethod]
         public static void Main()
