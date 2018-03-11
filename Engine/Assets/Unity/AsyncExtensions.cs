@@ -108,7 +108,7 @@ namespace Kharynic.Engine.Unity
                 AsyncEnumeratorRunner.Instance.Value.Run(continuation);
             }
 
-            public bool IsCompleted => false;
+            public bool IsCompleted => Time.smoothDeltaTime < (1f / MinimumTargetFps);
             public void GetResult() { }
         }
     }
