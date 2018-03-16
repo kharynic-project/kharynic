@@ -3,10 +3,13 @@
 // For this reason it needs type annotations in block comments.
 window.Kharynic = window.Kharynic || {};
 
+// TODO: merge with WebHost?
 Kharynic.WebHost.EngineInterface = 
 {
     Externals: {},
 
+    // called from Kharynic.Engine.Engine.Main
+    // prepares game display and prepares scripting
     OnLoad: function () /*: void*/
     {
         Kharynic.WebHost.OnLoad();

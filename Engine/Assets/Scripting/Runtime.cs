@@ -15,6 +15,7 @@ namespace Kharynic.Engine.Scripting
                                                         BindingFlags.Static |
                                                         BindingFlags.DeclaredOnly;
 
+        // called from Kharynic.Engine.Engine.Main after EngineInterface.OnLoad
         public static void RegisterAll(Assembly assembly = null)
         {
             var methods = 

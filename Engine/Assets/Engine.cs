@@ -21,6 +21,7 @@ namespace Kharynic.Engine
 			_scriptingInterface = new ScriptingInterface(this);
 		}
 
+		// called after Unity game loop is started
 		public async void Main(string[] args)
 		{
 			LogBuildInfo();

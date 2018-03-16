@@ -1,5 +1,3 @@
-// this is main file loaded by the browser and executed starting with WebHost.Init
-
 window.Kharynic = window.Kharynic || {};
 
 Kharynic.WebHost = {
@@ -72,13 +70,13 @@ Kharynic.WebHost = {
         script.setAttribute("src", path);
         document.head.appendChild(script);
     },
-    LoadAllScripts: function(listPath) {
+    LoadAllScripts: function(listPath, basePath) {
         var loadScript = this.LoadScript;
         fetch(listPath).then(function(response) {
             response.text().then(function(list) {
                 list.split('\n').forEach(line => {
                     if(!line.startsWith("// ") && line.length > 0)
-                        loadScript(line)
+                        loadScript((basePath != undefined ? basePath : "") + line)
                 });
             })
         });
@@ -110,6 +108,8 @@ Kharynic.WebHost = {
             nativeOpen.apply(this, arguments);
         };
     },
+    
+    // browser entry point: called inline from /index.html
     Init: function(host) {
         this.Host = host;
         this.ShowSplash();
@@ -119,6 +119,9 @@ Kharynic.WebHost = {
         try { window.screen.orientation.lock('landscape').catch(function() { }); } catch(e) {}
         this.Host.addEventListener("click", this.RequestFullscreen);
     },
+
+    // called from Kharynic.WebHost.EngineInterface.OnLoad
+    // sets up display of game content
     OnLoad: function () {
         this.Player = this.PlayerFrame.contentWindow.gameInstance;
         this.Maximize(this.PlayerFrame);
