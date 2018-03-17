@@ -49,7 +49,7 @@ namespace Kharynic.Engine.Editor
                 var scriptLines = GeneratorUtils.ReadFile(DefinitionPath)
                     .Split(lineSeparators, StringSplitOptions.RemoveEmptyEntries);
                 var signaturePattern = new Regex(
-                    @"^ */\*@Export\*/ *static +(?<funcName>\w+) *\( *(?<param>(?<paramName>\w+) */\* *: *(?<paramType>\w+) *\*/ *,? *)*\) */\* *: *(?<funcType>\w+) *\*/ *$");
+                    @"^ */\*\*?@[Ee]xport\*/ *static +(?<funcName>\w+) *\( *(?<param>(?<paramName>\w+) */\* *: *(?<paramType>\w+) *\*/ *,? *)*\) */\* *: *(?<funcType>\w+) *\*/ *$");
 
                 var functions = scriptLines
                     .Where(l => signaturePattern.IsMatch(l))

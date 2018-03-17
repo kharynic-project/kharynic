@@ -23,7 +23,7 @@ Kharynic.WebHost.WebHost = class
         this.Instance = new this(this.DefaultHost);
     }
 
-    /*@Export*/ static OnEngineStart() /*: void*/
+    /**@export*/ static OnEngineStart() /*: void*/
     {
         console.log("WebHost.OnEngineStart")
         var that = this.Instance; // engine can only call static methods...
@@ -32,12 +32,12 @@ Kharynic.WebHost.WebHost = class
         Kharynic.Engine.Scripting.Runtime.Init(that._player.EmscriptenModule);
     }
 
-    /*@Export*/ static Log(message /*: string*/) /*: void*/
+    /**@export*/ static Log(message /*: string*/) /*: void*/
     {
         window.console.log(message); 
     }
 
-    /*@Export*/ static GetRootUrl() /*: string*/
+    /**@export*/ static GetRootUrl() /*: string*/
     {
         var document = this.Instance._host.ownerDocument;
         return document.location.href.replace(/\/(index.html)?$/i, "");
