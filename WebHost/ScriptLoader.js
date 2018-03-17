@@ -28,6 +28,7 @@ Kharynic.WebHost.ScriptLoader = class
         var loadScript = this._LoadScript;
         var response = await fetch(listPath);
         var list = await response.text();
+        console.log("loaded: " + listPath);
         for (let line of list.split('\n')) 
         {
             if(line.startsWith("// ") || line.length == 0)
@@ -73,11 +74,14 @@ Kharynic.WebHost.ScriptLoader = class
             }
             var init = object[this.constructor.InitMethodName];
             if (typeof(init) == "function" && init.length == 0)
+            {
                 init.call(object);
+                console.log("initialized: " + path);
+            }
         }
     }
 }
-Kharynic.WebHost.ScriptLoader.SourceListExtension = ".txt";
-Kharynic.WebHost.ScriptLoader.MainSourceList = "/WebHost/filelist.txt";
+Kharynic.WebHost.ScriptLoader.SourceListExtension = ".src";
+Kharynic.WebHost.ScriptLoader.MainSourceList = "/WebHost/WebHost.src";
 Kharynic.WebHost.ScriptLoader.RootNamespace = Kharynic;
 Kharynic.WebHost.ScriptLoader.InitMethodName = "Init";

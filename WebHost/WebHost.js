@@ -16,7 +16,6 @@ Kharynic.WebHost.WebHost = class
 
     static Init()
     {
-        console.log("WebHost.Init")
         this.Instance = new this(this.DefaultHost);
     }
 

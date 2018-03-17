@@ -3,5 +3,5 @@
 /WebHost/Player.js
 /WebHost/Splash.js
 /Engine/Scripting/Runtime.js
-/WebHost/filelist.generated.txt
-/Game/filelist.txt
+/WebHost/WebHost.generated.src
+/Game/Game.src
