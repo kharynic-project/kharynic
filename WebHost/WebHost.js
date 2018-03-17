@@ -28,6 +28,17 @@ Kharynic.WebHost.WebHost = class
         Kharynic.Engine.Scripting.Runtime.Init(this._player.EmscriptenModule);
     }
 
+    static Maximize(element /*: HTMLElement*/) 
+    {
+        element.style.position = "absolute";
+        element.style.top = "0";
+        element.style.left = "0";
+        element.style.width = "100%";
+        element.style.height = "100%";
+        element.style.overflow = "hidden";
+        element.style.border = "none";
+    }
+
     async _Load()
     {
         await this._LoadScripts();
@@ -68,17 +79,6 @@ Kharynic.WebHost.WebHost = class
         await this._LoadAllScripts("/WebHost/filelist.txt");
         await this._LoadAllScripts("/WebHost/filelist.generated.txt");
         await this._LoadAllScripts("/Game/filelist.txt", "/Game/");
-    }
-
-    static Maximize(element /*: HTMLElement*/) 
-    {
-        element.style.position = "absolute";
-        element.style.top = "0";
-        element.style.left = "0";
-        element.style.width = "100%";
-        element.style.height = "100%";
-        element.style.overflow = "hidden";
-        element.style.border = "none";
     }
 
     _ShowWatermark() 

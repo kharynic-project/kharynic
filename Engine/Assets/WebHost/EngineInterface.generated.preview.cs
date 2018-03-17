@@ -1,4 +1,4 @@
-// Code generated on 2018.03.14 by /Engine/Assets/Editor/EngineInterface.Generator.cs - DO NOT EDIT.
+// Code generated on 2018.03.17 by /Engine/Assets/Editor/EngineInterface.Generator.cs - DO NOT EDIT.
 
 #if UNITY_EDITOR
 
@@ -13,11 +13,7 @@ namespace Kharynic.WebHost
 
         public static void OnLoad() { Kharynic.Engine.Debug.Log("EngineInterface.OnLoad: unsupported platform"); }
 
-        public static void Execute(string code) { Kharynic.Engine.Debug.Log("EngineInterface.Execute: unsupported platform"); }
-
         public static void Log(string message) { Kharynic.Engine.Debug.Log("EngineInterface.Log: unsupported platform"); }
-
-        public static void RegisterExternal(string name, IntPtr functionPtr) { Kharynic.Engine.Debug.Log("EngineInterface.RegisterExternal: unsupported platform"); }
 
         public static string GetRootUrl() { Kharynic.Engine.Debug.Log("EngineInterface.GetRootUrl: unsupported platform"); return default(string); }
     }
