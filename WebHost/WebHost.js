@@ -1,6 +1,10 @@
 window.Kharynic = window.Kharynic || {};
 Kharynic.WebHost = Kharynic.WebHost || {};
 
+/**
+ * Responsible for browser integration. Loads game engine.
+ * Exposes script functions to the engine with @Export attribute.
+ */
 Kharynic.WebHost.WebHost = class 
 {
     constructor(host /*: HTMLElement*/)
@@ -19,12 +23,24 @@ Kharynic.WebHost.WebHost = class
         this.Instance = new this(this.DefaultHost);
     }
 
-    OnEngineStart()
+    /*@Export*/ static OnEngineStart() /*: void*/
     {
         console.log("WebHost.OnEngineStart")
-        this._player.OnEngineStart();
-        this._splash.Remove();
-        Kharynic.Engine.Scripting.Runtime.Init(this._player.EmscriptenModule);
+        var that = this.Instance; // engine can only call static methods...
+        that._player.OnEngineStart();
+        that._splash.Remove();
+        Kharynic.Engine.Scripting.Runtime.Init(that._player.EmscriptenModule);
+    }
+
+    /*@Export*/ static Log(message /*: string*/) /*: void*/
+    {
+        window.console.log(message); 
+    }
+
+    /*@Export*/ static GetRootUrl() /*: string*/
+    {
+        var document = this.Instance._host.ownerDocument;
+        return document.location.href.replace(/\/(index.html)?$/i, "");
     }
 
     static Maximize(element /*: HTMLElement*/) 

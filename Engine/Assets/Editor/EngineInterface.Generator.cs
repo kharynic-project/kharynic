@@ -15,8 +15,9 @@ namespace Kharynic.Engine.Editor
         public class Generator : IPreprocessBuild
         {
             public int callbackOrder => 3;
+            private static readonly Type DeclaringType = typeof(WebHost.WebHost);
             private static string DefinitionPath => 
-                GeneratorUtils.GetSourceFilePath(typeof(WebHost.EngineInterface), "js", isUnityAsset: false, isGenerated: false);
+                GeneratorUtils.GetSourceFilePath(DeclaringType, "js", isUnityAsset: false, isGenerated: false);
 
             private class Function
             {
@@ -48,7 +49,7 @@ namespace Kharynic.Engine.Editor
                 var scriptLines = GeneratorUtils.ReadFile(DefinitionPath)
                     .Split(lineSeparators, StringSplitOptions.RemoveEmptyEntries);
                 var signaturePattern = new Regex(
-                    @"^ *(?<funcName>\w+) *: *function *\( *(?<param>(?<paramName>\w+) */\* *: *(?<paramType>\w+) *\*/ *,? *)*\) */\* *: *(?<funcType>\w+) *\*/ *$");
+                    @"^ */\*@Export\*/ *static +(?<funcName>\w+) *\( *(?<param>(?<paramName>\w+) */\* *: *(?<paramType>\w+) *\*/ *,? *)*\) */\* *: *(?<funcType>\w+) *\*/ *$");
 
                 var functions = scriptLines
                     .Where(l => signaturePattern.IsMatch(l))
@@ -75,9 +76,9 @@ namespace Kharynic.Engine.Editor
                     $"{GeneratorUtils.GetHeaderComment()}\n\n" +
                     $"using {typeof(IntPtr).Namespace};\n" +
                     $"using {typeof(DllImportAttribute).Namespace};\n\n" +
-                    $"namespace {typeof(WebHost.EngineInterface).Namespace}\n" +
+                    $"namespace {DeclaringType.Namespace}\n" +
                     $"{{\n" +
-                    $"    public static class {nameof(WebHost.EngineInterface)}\n" +
+                    $"    public static class {DeclaringType.Name}\n" +
                     $"    {{\n" +
                     $"        public const bool Enabled = true;\n\n");
                 code.Append(String.Join("\n\n", functions.Select(function =>
@@ -89,7 +90,7 @@ namespace Kharynic.Engine.Editor
                 code.Append(
                     $"\n    }}\n" +
                     $"}}\n");
-                var path = GeneratorUtils.GetSourceFilePath(typeof(WebHost.EngineInterface), "cs", isUnityAsset: true);
+                var path = GeneratorUtils.GetSourceFilePath(DeclaringType, "cs", isUnityAsset: true);
                 GeneratorUtils.WriteFile(code.ToString(), path);
             }
 
@@ -99,10 +100,10 @@ namespace Kharynic.Engine.Editor
                     $"{GeneratorUtils.GetHeaderComment()}\n\n" +
                     $"#if UNITY_EDITOR\n\n" + 
                     $"using {typeof(IntPtr).Namespace};\n\n" +
-                    $"namespace {typeof(WebHost.EngineInterface).Namespace}\n" +
+                    $"namespace {DeclaringType.Namespace}\n" +
                     $"{{\n" +
                     $"    // this file is used by editor preview which cannot regenerate it, so it has to be commited\n" +
-                    $"    public static class {nameof(WebHost.EngineInterface)}\n" +
+                    $"    public static class {DeclaringType.Name}\n" +
                     $"    {{\n" +
                     $"        public const bool Enabled = false;\n\n");
                 code.Append(String.Join("\n\n", functions.Select(function =>
@@ -111,29 +112,19 @@ namespace Kharynic.Engine.Editor
                     var returnStatement = function.Type != "void" ? $" return default({function.Type});" : "";
                     return
                         $"        public static {function.Type} {function.Name}({parameters}) " +
-                        $"{{ {typeof(Debug).FullName}.{nameof(Debug.Log)}(\"{nameof(WebHost.EngineInterface)}.{function.Name}: unsupported platform\");{returnStatement} }}";
+                        $"{{ {typeof(Debug).FullName}.{nameof(Debug.Log)}(\"{DeclaringType.Name}.{function.Name}: unsupported platform\");{returnStatement} }}";
                 })));
                 code.Append(
                     $"\n    }}\n" +
                     $"}}\n" + 
                     $"\n#endif\n");
-                var path = GeneratorUtils.GetSourceFilePath(typeof(WebHost.EngineInterface), "preview.cs", isUnityAsset: true);
+                var path = GeneratorUtils.GetSourceFilePath(DeclaringType, "preview.cs", isUnityAsset: true);
                 GeneratorUtils.WriteFile(code.ToString(), path, protectEditor: false);
-            }
-
-            private static string GetScriptHostObject()
-            {
-                var lineSeparators = new[] {'\n', '\r'};
-                var scriptLines = GeneratorUtils.ReadFile(DefinitionPath)
-                    .Split(lineSeparators, StringSplitOptions.RemoveEmptyEntries);
-                var objectDeclarationRegexp = new Regex(@"^ *(?<object>[\w\.]+) *= *$");
-                var declarationLine = scriptLines.First(l => objectDeclarationRegexp.IsMatch(l));
-                return objectDeclarationRegexp.Match(declarationLine).Groups["object"].Value;
             }
 
             private static void GenerateEmscriptenLib(IEnumerable<Function> functions)
             {
-                var scriptHostObject = GetScriptHostObject();
+                var scriptHostObject = DeclaringType.FullName;
                 var code = new StringBuilder(
                     $"{GeneratorUtils.GetHeaderComment()}\n" +
                     "mergeInto(LibraryManager.library, \n" +
@@ -171,7 +162,7 @@ namespace Kharynic.Engine.Editor
                 })));
                 code.Append("\n});\n");
                 var path = $"{Kharynic.Engine.BuildInfo.RelativeEngineAssetsPath}/Plugins/" +
-                           $"{typeof(WebHost.EngineInterface).FullName}.generated.jslib";
+                           $"{DeclaringType.FullName}.generated.jslib";
                 GeneratorUtils.WriteFile(code.ToString(), path);
             }
         }

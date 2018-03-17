@@ -38,7 +38,7 @@ namespace Kharynic.Engine
                 UnityEngine.Debug.Log(message);
                 File.AppendAllText(LogFile, $"{message}\n");
             #else
-                EngineInterface.Log(message);
+                WebHost.WebHost.Log(message);
             #endif
         }
 

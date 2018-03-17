@@ -9,7 +9,7 @@ namespace Kharynic.Engine
     {
         private static readonly Lazy<string> LazyGameUrl = new Lazy<string>(() => {
             if (BuildInfo.IsWebApp)
-                return WebHost.EngineInterface.GetRootUrl();
+                return WebHost.WebHost.GetRootUrl();
             var fileProtocol = BuildInfo.LocalProjectPath.Contains(":") ? "file:///" : "file://";
             return $"{fileProtocol}{BuildInfo.LocalProjectPath}";
         });
