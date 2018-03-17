@@ -16,6 +16,7 @@ Kharynic.WebHost.Player = class
         var that = this;
         this._iframe.onload = function() { that._InitSandbox(); };
         this._iframe.src = this.constructor.Source;
+        console.log("starting Unity...");
         this._host.appendChild(this._iframe);
     }
 

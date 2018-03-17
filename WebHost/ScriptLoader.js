@@ -75,8 +75,8 @@ Kharynic.WebHost.ScriptLoader = class
             var init = object[this.constructor.InitMethodName];
             if (typeof(init) == "function" && init.length == 0)
             {
+                console.log("initializing: " + path);
                 init.call(object);
-                console.log("initialized: " + path);
             }
         }
     }
