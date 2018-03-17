@@ -1,4 +1,7 @@
+/WebHost/WebHost.js
 /WebHost/EngineInterface.js
 /WebHost/Player.js
 /WebHost/Splash.js
 /Engine/Scripting/Runtime.js
+/WebHost/filelist.generated.txt
+/Game/filelist.txt

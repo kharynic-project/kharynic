@@ -6,6 +6,7 @@ Kharynic.WebHost.WebHost = class
     constructor(host /*: HTMLElement*/)
     {
         this._host = host;
+        this._scriptLoader = new Kharynic.WebHost.ScriptLoader(host);
         this._splash = null;
         this._player = null;
 
@@ -13,11 +14,10 @@ Kharynic.WebHost.WebHost = class
         this._Load();
     }
 
-    // browser entry point called from /index.html
-    static async Init(host /*: HTMLElement*/)
+    static Init()
     {
         console.log("WebHost.Init")
-        this.Instance = new this(host);
+        this.Instance = new this(this.DefaultHost);
     }
 
     OnEngineStart()
@@ -41,44 +41,8 @@ Kharynic.WebHost.WebHost = class
 
     async _Load()
     {
-        await this._LoadScripts();
-        console.log("all scripts loaded");
         this._splash = new Kharynic.WebHost.Splash(this._host);
         this._player = new Kharynic.WebHost.Player(this._host);
-    }
-
-    _LoadScript(path) 
-    {
-        var that = this;
-        return new Promise(continuation => {
-            var script = that._host.ownerDocument.createElement("script");
-            script.onload = function()
-            {
-                console.log(path + " loaded");
-                continuation();
-            };
-            script.setAttribute("src", path);
-            that._host.ownerDocument.head.appendChild(script);
-        });
-    }
-
-    async _LoadAllScripts(listPath, basePath) 
-    {
-        var loadScript = this._LoadScript;
-        var response = await fetch(listPath);
-        var list = await response.text();
-        for (let line of list.split('\n')) 
-        {
-            if(!line.startsWith("// ") && line.length > 0)
-                await this._LoadScript((basePath != undefined ? basePath : "") + line)
-        };
-    }
-
-    async _LoadScripts()
-    {
-        await this._LoadAllScripts("/WebHost/filelist.txt");
-        await this._LoadAllScripts("/WebHost/filelist.generated.txt");
-        await this._LoadAllScripts("/Game/filelist.txt", "/Game/");
     }
 
     _ShowWatermark() 
@@ -97,4 +61,5 @@ Kharynic.WebHost.WebHost = class
     }
 }
 Kharynic.WebHost.WebHost.EngineVersionFile = "/Engine/Version.txt";
-Kharynic.WebHost.WebHost.Instance = undefined;
+Kharynic.WebHost.WebHost.Instance = undefined; // required by EngineInterface
+Kharynic.WebHost.WebHost.DefaultHost = document.body;
