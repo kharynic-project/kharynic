@@ -10,18 +10,21 @@ Kharynic.WebHost.Player = class
         this._gameContainer = null; // div parent of WebGL canvas
         this._canvas = null; // WebGL canvas
         this._gameInstance = null; // created by UnityLoader.instantiate
+        this._playerLoadingStartTime = new Date();
 
         this._LockOrientation();
         this._iframe.id = this.constructor.HtmlId;
         var that = this;
         this._iframe.onload = function() { that._InitSandbox(); };
         this._iframe.src = this.constructor.Source;
-        console.log("starting Unity...");
+        console.log("Unity: loading...");
         this._host.appendChild(this._iframe);
     }
 
     OnEngineStart()
     {
+        var playerLoadingTime = (new Date() - this._playerLoadingStartTime) / 1000;
+        console.log("Unity: loaded after " + playerLoadingTime + "s");
         this._gameInstance = this._iframe.contentWindow.gameInstance;
         this._canvas = this._gameContainer.getElementsByTagName("canvas")[0];
         this._Maximize();
