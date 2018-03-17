@@ -11,6 +11,7 @@ Kharynic.WebHost.WebHost = class
     {
         this._host = host;
         this._scriptLoader = new Kharynic.WebHost.ScriptLoader(host);
+        this._console = host.ownerDocument.defaultView.console;
         this._splash = null;
         this._player = null;
 
@@ -24,21 +25,22 @@ Kharynic.WebHost.WebHost = class
     }
 
     /**
-     * Exposes EmscriptenModule from Unity gameInstance to Scripting.Runtime
-     * to enable calls JS->C# and registration of exported engine methods.
+     * Passes EmscriptenModule from loaded Unity gameInstance to Scripting.Runtime
+     * to enable registration of exported engine methods and calls to them.
      */
     /**@export*/ static OnEngineStart() /*: void*/
     {
         console.log("WebHost.OnEngineStart")
-        var that = this.Instance; // engine can only call static methods...
+        var that = this.Instance;
         that._player.OnEngineStart();
         that._splash.Remove();
-        Kharynic.Engine.Scripting.Runtime.Init(that._player.EmscriptenModule);
+        var emscriptenModule = that._player.EmscriptenModule;
+        Kharynic.Engine.Scripting.Runtime.Init(emscriptenModule);
     }
 
     /**@export*/ static Log(message /*: string*/) /*: void*/
     {
-        window.console.log(message); 
+        this.Instance._console.log(message); 
     }
 
     /**@export*/ static GetRootUrl() /*: string*/
