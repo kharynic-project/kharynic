@@ -1,28 +1,77 @@
 window.Kharynic = window.Kharynic || {};
+Kharynic.WebHost = Kharynic.WebHost || {};
 
-Kharynic.WebHost = {
-    Host: undefined,
-    GameContainer: undefined,
-    PlayerFrame: undefined,
-    PlayerCanvas: undefined,
-    Player: undefined,
-    Splash: undefined,
-    Scripts: undefined,
-    ShowSplash: function() {
-        this.Splash = document.createElement("div");
-        this.Splash.id = "Splash";
-        this.Maximize(this.Splash);
-        var unityLogo = document.createElement("img");
-        unityLogo.id = "unityLogo";
-        unityLogo.src = "/resources/images/unity.png";
-        this.Splash.appendChild(unityLogo);
-        this.Host.appendChild(this.Splash);
-    },
-    HideSplash: function() {
-        this.PlayerFrame.style.opacity = 1;
-        this.Splash.remove();
-    },
-    Maximize: function(element) {
+Kharynic.WebHost.WebHost = class 
+{
+    constructor(host /*: HTMLElement*/)
+    {
+        this._host = host;
+        this._splash = null;
+        this._player = null;
+
+        this._ShowWatermark();
+        this._Load();
+    }
+
+    // browser entry point called from /index.html
+    static async Init(host /*: HTMLElement*/)
+    {
+        console.log("WebHost.Init")
+        this.Instance = new this(host);
+    }
+
+    OnEngineStart()
+    {
+        console.log("WebHost.OnEngineStart")
+        this._player.OnEngineStart();
+        this._splash.Remove();
+        Kharynic.Engine.Scripting.Runtime.Init(this._player.EmscriptenModule);
+    }
+
+    async _Load()
+    {
+        await this._LoadScripts();
+        console.log("all scripts loaded");
+        this._splash = new Kharynic.WebHost.Splash(this._host);
+        this._player = new Kharynic.WebHost.Player(this._host);
+    }
+
+    _LoadScript(path) 
+    {
+        var that = this;
+        return new Promise(continuation => {
+            var script = that._host.ownerDocument.createElement("script");
+            script.onload = function()
+            {
+                console.log(path + " loaded");
+                continuation();
+            };
+            script.setAttribute("src", path);
+            that._host.ownerDocument.head.appendChild(script);
+        });
+    }
+
+    async _LoadAllScripts(listPath, basePath) 
+    {
+        var loadScript = this._LoadScript;
+        var response = await fetch(listPath);
+        var list = await response.text();
+        for (let line of list.split('\n')) 
+        {
+            if(!line.startsWith("// ") && line.length > 0)
+                await this._LoadScript((basePath != undefined ? basePath : "") + line)
+        };
+    }
+
+    async _LoadScripts()
+    {
+        await this._LoadAllScripts("/WebHost/filelist.txt");
+        await this._LoadAllScripts("/WebHost/filelist.generated.txt");
+        await this._LoadAllScripts("/Game/filelist.txt", "/Game/");
+    }
+
+    static Maximize(element /*: HTMLElement*/) 
+    {
         element.style.position = "absolute";
         element.style.top = "0";
         element.style.left = "0";
@@ -30,106 +79,22 @@ Kharynic.WebHost = {
         element.style.height = "100%";
         element.style.overflow = "hidden";
         element.style.border = "none";
-    },
-    CreatePlayer: function() {
-        this.PlayerFrame = document.createElement("iframe");
-        this.PlayerFrame.id = "PlayerFrame";
-        this.PlayerFrame.src = "/bin/index.html";
-        this.PlayerFrame.onload = function(event) {
-            var playerWindow = event.srcElement.contentWindow;
-            Kharynic.WebHost.SecureRequests(playerWindow);
-            // bridge namespaces
-            playerWindow.Kharynic = window.Kharynic;
-            Kharynic.WebHost.GameContainer = Kharynic.WebHost.PlayerFrame.contentDocument.getElementById("gameContainer");
-        }
-        this.PlayerFrame.style.opacity = 0;
-        this.Host.appendChild(this.PlayerFrame);
-    },
-    RequestFullscreen: function () {
-        var host = Kharynic.WebHost.Host;
-        var canvas = Kharynic.WebHost.PlayerCanvas;
-        if (host == undefined || canvas == undefined)
-            return;
-        host.requestFullscreen = 
-            host.requestFullscreen ||
-            host.mozRequestFullScreen ||
-            host.webkitRequestFullScreen ||
-            host.msRequestFullscreen ||
-            function(){};
-        canvas.requestPointerLock = 
-            canvas.requestPointerLock ||
-            canvas.mozRequestPointerLock ||
-            canvas.webkitRequestPointerLock ||
-            function(){};
-        host.requestFullscreen();
-        canvas.requestPointerLock();
-    },
-    LoadScript: function(path) {
-        console.log("loading " + path);
-        var script = document.createElement("script");
-        script.setAttribute("src", path);
-        document.head.appendChild(script);
-    },
-    LoadAllScripts: function(listPath, basePath) {
-        var loadScript = this.LoadScript;
-        fetch(listPath).then(function(response) {
-            response.text().then(function(list) {
-                list.split('\n').forEach(line => {
-                    if(!line.startsWith("// ") && line.length > 0)
-                        loadScript((basePath != undefined ? basePath : "") + line)
-                });
-            })
-        });
-    },
-    LoadScripts: function() {
-        this.LoadAllScripts("/WebHost/filelist.txt");
-        this.LoadAllScripts("/WebHost/filelist.generated.txt");
-    },
-    ShowWatermark: function() {
+    }
+
+    _ShowWatermark() 
+    {
         var watermark = document.createElement("div");
         watermark.id = "watermark";
         watermark.textContent = "github.com/kharynic-project\nDeveloper preview - not playable yet";
-        this.Host.appendChild(watermark);
-        var engineVersionUrl = "/Engine/Version.txt";
-        fetch(engineVersionUrl).then(function(response) {
-            response.text().then(function(version) {
+        this._host.appendChild(watermark);
+        fetch(this.constructor.EngineVersionFile).then(function(response) 
+        {
+            response.text().then(function(version) 
+            {
                 watermark.textContent = "Kharynic Engine v" + version + "\n" + watermark.textContent;
             })
         });
-    },
-    SecureRequests(window) {
-        // mods/branches ran inside iframe can only use local requests
-        var nativeOpen = window.XMLHttpRequest.prototype.open;
-        window.XMLHttpRequest.prototype.open = function(method, url) {
-            if (url.indexOf("//") > 0 && !url.startsWith(document.location.origin + "/")) {
-                url = document.location.origin + "/blocked?" + encodeURIComponent(url);
-                this.send = function() { };
-            }
-            nativeOpen.apply(this, arguments);
-        };
-    },
-    
-    // browser entry point: called inline from /index.html
-    Init: function(host) {
-        this.Host = host;
-        this.ShowSplash();
-        this.ShowWatermark();
-        this.LoadScripts();
-        this.CreatePlayer();
-        try { window.screen.orientation.lock('landscape').catch(function() { }); } catch(e) {}
-        this.Host.addEventListener("click", this.RequestFullscreen);
-    },
-
-    // called from Kharynic.WebHost.EngineInterface.OnLoad
-    // sets up display of game content
-    OnLoad: function () {
-        this.Player = this.PlayerFrame.contentWindow.gameInstance;
-        this.Maximize(this.PlayerFrame);
-        this.Maximize(this.GameContainer);
-        this.PlayerCanvas = this.GameContainer.getElementsByTagName("canvas")[0];
-        this.Maximize(this.PlayerCanvas);
-        this.Host.onresize = function () { Kharynic.WebHost.Maximize(Kharynic.WebHost.PlayerCanvas); };
-        this.HideSplash();
-        this.PlayerCanvas.addEventListener("click", this.RequestFullscreen);
     }
-};
+}
+Kharynic.WebHost.WebHost.EngineVersionFile = "/Engine/Version.txt";
+Kharynic.WebHost.WebHost.Instance = undefined;

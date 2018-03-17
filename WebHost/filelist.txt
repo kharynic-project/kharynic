@@ -1,2 +1,4 @@
 /WebHost/EngineInterface.js
+/WebHost/Player.js
+/WebHost/Splash.js
 /Engine/Scripting/Runtime.js

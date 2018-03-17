@@ -12,9 +12,7 @@ Kharynic.WebHost.EngineInterface =
     // prepares game display and prepares scripting
     OnLoad: function () /*: void*/
     {
-        Kharynic.WebHost.OnLoad();
-        Kharynic.Engine.Scripting.Runtime.Init(Kharynic.WebHost.Player.Module);
-        Kharynic.WebHost.HideSplash();
+        Kharynic.WebHost.WebHost.Instance.OnEngineStart();
     },
 
     Execute: function (code /*: string*/) /*: void*/
@@ -37,5 +35,3 @@ Kharynic.WebHost.EngineInterface =
         return document.location.href.replace(/\/(index.html)?$/i, "");
     }
 };
-
-console.log("EngineInterface.js loaded");

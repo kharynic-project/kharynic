@@ -44,5 +44,3 @@ Kharynic.Engine.Scripting.Runtime = class
         parentType[fieldName] = pointer;
     }
 }
-
-console.log("Runtime.js loaded");
