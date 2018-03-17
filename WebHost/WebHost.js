@@ -23,6 +23,10 @@ Kharynic.WebHost.WebHost = class
         this.Instance = new this(this.DefaultHost);
     }
 
+    /**
+     * Exposes EmscriptenModule from Unity gameInstance to Scripting.Runtime
+     * to enable calls JS->C# and registration of exported engine methods.
+     */
     /**@export*/ static OnEngineStart() /*: void*/
     {
         console.log("WebHost.OnEngineStart")

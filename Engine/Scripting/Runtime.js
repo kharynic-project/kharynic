@@ -4,8 +4,10 @@ Kharynic.Engine.Scripting = Kharynic.Engine.Scripting || {};
 
 Kharynic.Engine.Scripting.Runtime = class
 {
-    // called from Kharynic.WebHost.EngineInterface.OnLoad
-    // enables calling transpiled CLR functions from scripts
+    /**
+     * Called from Kharynic.WebHost.WebHost.OnEngineStart.
+     * Enables calling transpiled CLR functions from scripts.
+     */
     static Init(emscriptenModule)
     {
         this._emscriptenModule = emscriptenModule;
@@ -32,8 +34,11 @@ Kharynic.Engine.Scripting.Runtime = class
         return buffer;
     }
 
-    // called from Kharynic.Engine.Scripting.Runtime.RegisterAll
-    // exposes engine methods to scripts
+    /**
+     * Called from Kharynic.Engine.Scripting.Runtime.RegisterAll.
+     * Exposes engine methods to scripts.
+     * Requires availability of EmscriptenModule.
+     */
     static RegisterExternalMethod(qualifiedName /*: string*/, pointer /*: int*/)
     {
         var referenceSegments = this.GetStringFromPtr(qualifiedName).split(".");
@@ -44,3 +49,4 @@ Kharynic.Engine.Scripting.Runtime = class
         parentType[fieldName] = pointer;
     }
 }
+Kharynic.Engine.Scripting.Runtime._emscriptenModule = null;

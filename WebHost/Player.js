@@ -9,7 +9,6 @@ Kharynic.WebHost.Player = class
         this._iframe = host.ownerDocument.createElement("iframe");
         this._gameContainer = null; // div parent of WebGL canvas
         this._canvas = null; // WebGL canvas
-        this._gameInstance = null; // created by UnityLoader.instantiate
         this._playerLoadingStartTime = new Date();
 
         this._LockOrientation();
@@ -25,7 +24,6 @@ Kharynic.WebHost.Player = class
     {
         var playerLoadingTime = (new Date() - this._playerLoadingStartTime) / 1000;
         console.log("Unity: loaded after " + playerLoadingTime + "s");
-        this._gameInstance = this._iframe.contentWindow.gameInstance;
         this._canvas = this._gameContainer.getElementsByTagName("canvas")[0];
         this._Maximize();
         var that = this;
@@ -35,7 +33,7 @@ Kharynic.WebHost.Player = class
 
     get EmscriptenModule()
     {
-        return this._gameInstance.Module;
+        return this._iframe.contentWindow.gameInstance.Module;
     }
 
     _LockOrientation()
