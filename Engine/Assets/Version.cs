@@ -15,7 +15,7 @@ namespace Kharynic.Engine
         public string Metadata { get; private set; }
         
         private static readonly string FilePath =
-            GeneratorUtils.GetSourceFilePath(typeof(Version), "txt", isUnityAsset: false, isGenerated: false);
+            GeneratorUtils.GetSourceFilePath(typeof(Version), "txt", isGenerated: false);
 
         private Version(){}
 

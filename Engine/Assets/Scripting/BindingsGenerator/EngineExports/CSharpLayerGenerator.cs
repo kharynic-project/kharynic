@@ -16,7 +16,7 @@ namespace Kharynic.Engine.Scripting.BindingsGenerator.EngineExports
         {
         }
 
-        public override string Path => GeneratorUtils.GetSourceFilePath(TargetType, "cs", isUnityAsset: true);
+        public override string Path => GeneratorUtils.GetSourceFilePath(TargetType, "cs");
 
         protected override string GenerateCode()
         {

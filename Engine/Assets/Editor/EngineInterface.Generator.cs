@@ -17,7 +17,7 @@ namespace Kharynic.Engine.Editor
             public int callbackOrder => 3;
             private static readonly Type DeclaringType = typeof(WebHost.WebHost);
             private static string DefinitionPath => 
-                GeneratorUtils.GetSourceFilePath(DeclaringType, "js", isUnityAsset: false, isGenerated: false);
+                GeneratorUtils.GetSourceFilePath(DeclaringType, "js", isGenerated: false);
 
             private class Function
             {
@@ -92,7 +92,7 @@ namespace Kharynic.Engine.Editor
                 code.Append(
                     $"\n    }}\n" +
                     $"}}\n");
-                var path = GeneratorUtils.GetSourceFilePath(DeclaringType, "cs", isUnityAsset: true);
+                var path = GeneratorUtils.GetSourceFilePath(DeclaringType, "cs");
                 GeneratorUtils.WriteFile(code.ToString(), path);
             }
 
@@ -120,7 +120,7 @@ namespace Kharynic.Engine.Editor
                     $"\n    }}\n" +
                     $"}}\n" + 
                     $"\n#endif\n");
-                var path = GeneratorUtils.GetSourceFilePath(DeclaringType, "preview.cs", isUnityAsset: true);
+                var path = GeneratorUtils.GetSourceFilePath(DeclaringType, "preview.cs");
                 GeneratorUtils.WriteFile(code.ToString(), path, protectEditor: false);
             }
 

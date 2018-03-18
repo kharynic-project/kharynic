@@ -45,17 +45,24 @@ namespace Kharynic.Engine.Scripting
         }
 
         // returns path relative to project root (suitabe for WriteFile and ReadFile)
-        public static string GetSourceFilePath(Type type, string extension, bool isUnityAsset = false, bool isGenerated = true)
+        public static string GetSourceFilePath(Type type, string extension, bool isGenerated = true)
         {
             var qualifiedName = $"{type.Namespace}.{type.Name}";
             var relativeName = new Regex($"^{BuildInfo.RootNamespace}\\.").Replace(qualifiedName, "");
             var path = $"/{relativeName.Replace(".", "/")}.{(isGenerated ? "generated." : "")}{extension}";
-            if (isUnityAsset)
+            if (extension.EndsWith(".cs"))
             {
                 if (path.StartsWith("/Engine/"))
                     path = new Regex($"^/Engine/").Replace(path, BuildInfo.RelativeEngineAssetsPath + "/");
                 else
                     path = BuildInfo.RelativeEngineAssetsPath + path;
+            }
+            if (extension.EndsWith(".jslib"))
+            {
+                if (path.StartsWith("/Engine/"))
+                    path = new Regex($"^/Engine/").Replace(path, BuildInfo.RelativeEngineAssetsPath + "/Plugins/");
+                else
+                    path = BuildInfo.RelativeEngineAssetsPath + "/Plugins" + path;
             }
             return path;
         }

@@ -14,7 +14,7 @@ namespace Kharynic.Engine
     public static class Debug
     {
         private static readonly string LogFile = GeneratorUtils.ToAbsolutePath(GeneratorUtils.GetSourceFilePath(
-            typeof(Debug), "log", isUnityAsset: false, isGenerated: false));
+            typeof(Debug), "log", isGenerated: false));
         
         private static readonly char[] PathSeparators = {'/','\\'};
         
