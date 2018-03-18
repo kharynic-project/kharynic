@@ -50,14 +50,14 @@ namespace Kharynic.Engine.Scripting
             var qualifiedName = $"{type.Namespace}.{type.Name}";
             var relativeName = new Regex($"^{BuildInfo.RootNamespace}\\.").Replace(qualifiedName, "");
             var path = $"/{relativeName.Replace(".", "/")}.{(isGenerated ? "generated." : "")}{extension}";
-            if (extension.EndsWith(".cs"))
+            if (path.EndsWith(".cs"))
             {
                 if (path.StartsWith("/Engine/"))
                     path = new Regex($"^/Engine/").Replace(path, BuildInfo.RelativeEngineAssetsPath + "/");
                 else
                     path = BuildInfo.RelativeEngineAssetsPath + path;
             }
-            if (extension.EndsWith(".jslib"))
+            if (path.EndsWith(".jslib"))
             {
                 if (path.StartsWith("/Engine/"))
                     path = new Regex($"^/Engine/").Replace(path, BuildInfo.RelativeEngineAssetsPath + "/Plugins/");
