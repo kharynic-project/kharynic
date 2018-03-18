@@ -17,3 +17,4 @@ called by ScriptLoader after all scripts are loaded.
             - JS: Runtime.Init
           - C#: Runtime.RegisterAll
           - JS: WebHost.OnEngineReady
+            - JS: Startup.StartGame
