@@ -30,7 +30,7 @@ namespace Kharynic.Engine.Scripting
             var list = 
                 GeneratorUtils.GetHeaderComment() + "\n" +
                 string.Join("\n", paths) + "\n";
-            const string path = "WebHost/WebHost.generated.src";
+            const string path = "Engine/Engine.generated.src";
             GeneratorUtils.WriteFile(list, path);
         }
 

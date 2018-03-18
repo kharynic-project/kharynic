@@ -22,7 +22,7 @@ namespace Kharynic.Engine
 		}
 
 		// called after Unity game loop is started
-		public async void Main(string[] args)
+		public void Main(string[] args)
 		{
 			LogBuildInfo();
 			if (args.Any(a => !string.IsNullOrWhiteSpace(a)))
@@ -33,6 +33,7 @@ namespace Kharynic.Engine
 			// as it's needed to signal that emscripten module is ready to use.
 			WebHost.WebHost.OnEngineStart();
 			Runtime.RegisterAll(GetType().Assembly);
+			WebHost.WebHost.OnEngineReady();
 		}
 
 		public void Dispose()

@@ -16,14 +16,14 @@ Kharynic.WebHost.Player = class
         var that = this;
         this._iframe.onload = function() { that._InitSandbox(); };
         this._iframe.src = this.constructor.Source;
-        console.log("Unity: loading...");
+        console.log("Engine: loading...");
         this._host.appendChild(this._iframe);
     }
 
-    OnEngineStart()
+    OnEngineReady()
     {
         var playerLoadingTime = (new Date() - this._playerLoadingStartTime) / 1000;
-        console.log("Unity: loaded after " + playerLoadingTime + "s");
+        console.log("Engine: loaded after " + playerLoadingTime + "s");
         this._canvas = this._gameContainer.getElementsByTagName("canvas")[0];
         this._Maximize();
         var that = this;

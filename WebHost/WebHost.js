@@ -10,7 +10,6 @@ Kharynic.WebHost.WebHost = class
     constructor(host /*: HTMLElement*/)
     {
         this._host = host;
-        this._scriptLoader = new Kharynic.WebHost.ScriptLoader(host);
         this._console = host.ownerDocument.defaultView.console;
         this._splash = null;
         this._player = null;
@@ -28,24 +27,32 @@ Kharynic.WebHost.WebHost = class
      * Passes EmscriptenModule from loaded Unity gameInstance to Scripting.Runtime
      * to enable registration of exported engine methods and calls to them.
      */
-    /**@export*/ static OnEngineStart() /*: void*/
+    /**@export*/ OnEngineStart() /*: void*/
     {
         console.log("WebHost.OnEngineStart")
-        var that = this.Instance;
-        that._player.OnEngineStart();
-        that._splash.Remove();
-        var emscriptenModule = that._player.EmscriptenModule;
+        var emscriptenModule = this._player.EmscriptenModule;
         Kharynic.Engine.Scripting.Runtime.Init(emscriptenModule);
     }
 
-    /**@export*/ static Log(message /*: string*/) /*: void*/
+    /**
+     * Initializes game content
+     */
+    /**@export*/ OnEngineReady() /*: void*/
     {
-        this.Instance._console.log(message); 
+        console.log("WebHost.OnEngineReady");
+        this._player.OnEngineReady();
+        this._splash.Remove();
+        Kharynic.Game.Startup.StartGame();
     }
 
-    /**@export*/ static GetRootUrl() /*: string*/
+    /**@export*/ Log(message /*: string*/) /*: void*/
     {
-        var document = this.Instance._host.ownerDocument;
+        this._console.log(message); 
+    }
+
+    /**@export*/ GetRootUrl() /*: string*/
+    {
+        var document = this._host.ownerDocument;
         return document.location.href.replace(/\/(index.html)?$/i, "");
     }
 
@@ -82,5 +89,5 @@ Kharynic.WebHost.WebHost = class
     }
 }
 Kharynic.WebHost.WebHost.EngineVersionFile = "/Engine/Version.txt";
-Kharynic.WebHost.WebHost.Instance = undefined; // required by EngineInterface
+Kharynic.WebHost.WebHost.Instance = undefined; // required by non-static @exports
 Kharynic.WebHost.WebHost.DefaultHost = document.body;

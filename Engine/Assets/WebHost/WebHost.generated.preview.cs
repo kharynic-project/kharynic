@@ -1,4 +1,4 @@
-// Code generated on 2018.03.17 by /Engine/Assets/Editor/EngineInterface.Generator.cs - DO NOT EDIT.
+// Code generated on 2018.03.18 by /Engine/Assets/Editor/EngineInterface.Generator.cs - DO NOT EDIT.
 
 #if UNITY_EDITOR
 
@@ -12,6 +12,8 @@ namespace Kharynic.WebHost
         public const bool Enabled = false;
 
         public static void OnEngineStart() { Kharynic.Engine.Debug.Log("WebHost.OnEngineStart: unsupported platform"); }
+
+        public static void OnEngineReady() { Kharynic.Engine.Debug.Log("WebHost.OnEngineReady: unsupported platform"); }
 
         public static void Log(string message) { Kharynic.Engine.Debug.Log("WebHost.Log: unsupported platform"); }
 
