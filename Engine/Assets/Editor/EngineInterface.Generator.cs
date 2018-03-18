@@ -24,6 +24,7 @@ namespace Kharynic.Engine.Editor
                 public string Name;
                 public string Type;
                 public Dictionary<string, string> Params; // Name, Type
+                public bool IsStatic;
             }
 
             [MenuItem("Kharynic/Generate script imports")]
@@ -49,7 +50,7 @@ namespace Kharynic.Engine.Editor
                 var scriptLines = GeneratorUtils.ReadFile(DefinitionPath)
                     .Split(lineSeparators, StringSplitOptions.RemoveEmptyEntries);
                 var signaturePattern = new Regex(
-                    @"^ */\*\*?@[Ee]xport\*/ *static +(?<funcName>\w+) *\( *(?<param>(?<paramName>\w+) */\* *: *(?<paramType>\w+) *\*/ *,? *)*\) */\* *: *(?<funcType>\w+) *\*/ *$");
+                    @"^ */\*\*?@[Ee]xport\*/ *(?<isStatic>static +)?(?<funcName>\w+) *\( *(?<param>(?<paramName>\w+) */\* *: *(?<paramType>\w+) *\*/ *,? *)*\) */\* *: *(?<funcType>\w+) *\*/ *$");
 
                 var functions = scriptLines
                     .Where(l => signaturePattern.IsMatch(l))
@@ -64,7 +65,8 @@ namespace Kharynic.Engine.Editor
                             Type = match.Groups["funcType"].Value,
                             Params = Enumerable.Range(0, paramNames.Count).ToDictionary(
                                 i => paramNames[i].Value,
-                                i => paramTypes[i].Value)
+                                i => paramTypes[i].Value),
+                            IsStatic = match.Groups["isStatic"].Success
                         };
                     }).ToArray();
                 return functions;
@@ -136,7 +138,7 @@ namespace Kharynic.Engine.Editor
                             f.Params[paramName] == "string" ? 
                                 $"Pointer_stringify({paramName})" : 
                                 paramName));
-                    var call = $"{scriptHostObject}.{f.Name}({args})";
+                    var call = $"{scriptHostObject}.{(f.IsStatic ? "" : "Instance.")}{f.Name}({args})";
                     string body;
                     if (string.Equals(f.Type, "Void", StringComparison.InvariantCultureIgnoreCase))
                         body = 
