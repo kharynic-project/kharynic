@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
-namespace Kharynic.Engine.Scripting
+namespace Kharynic.Engine.Scripting.BindingsGenerator.EngineExports
 {
     internal abstract class GeneratorBase
     {

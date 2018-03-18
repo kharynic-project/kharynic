@@ -4,13 +4,12 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace Kharynic.Engine.Scripting
+namespace Kharynic.Engine.Scripting.BindingsGenerator.EngineExports
 {
     // Generates C# glue code for calling .net methods from scripts.
     // TODO: support for reference parameters and return types
     internal class CSharpLayerGenerator : GeneratorBase
     {
-        public const string GeneratedInterfaceSuffix = "_generated";
         const string ThisRefVar = "thisRef";
 
         public CSharpLayerGenerator(Type targetType) : base(targetType)
@@ -26,7 +25,7 @@ namespace Kharynic.Engine.Scripting
                 $"namespace {TargetType.Namespace}\n" +
                 $"{{\n" +
                 $"    [{typeof(GeneratedInterfaceAttribute).FullName}]\n" +
-                $"    public static class {TargetType.Name}{GeneratedInterfaceSuffix}\n" +
+                $"    public static class {TargetType.Name}{Runtime.GeneratedInterfaceSuffix}\n" +
                 $"    {{\n";
             var footer =
                 $"    }}\n" +

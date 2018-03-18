@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -14,6 +13,7 @@ namespace Kharynic.Engine.Scripting
         private const BindingFlags MethodBindingFlags = BindingFlags.Public |
                                                         BindingFlags.Static |
                                                         BindingFlags.DeclaredOnly;
+        public const string GeneratedInterfaceSuffix = "_generated";
 
         // called from Kharynic.Engine.Engine.Main after EngineInterface.OnLoad
         public static void RegisterAll(Assembly assembly = null)
@@ -61,7 +61,7 @@ namespace Kharynic.Engine.Scripting
             System.Diagnostics.Debug.Assert(m.DeclaringType != null);
             var qualifiedTypeName = m.DeclaringType.FullName; //with _generated suffix
             System.Diagnostics.Debug.Assert(qualifiedTypeName != null);
-            var typeSuffixLength = CSharpLayerGenerator.GeneratedInterfaceSuffix.Length;
+            var typeSuffixLength = GeneratedInterfaceSuffix.Length;
             qualifiedTypeName = qualifiedTypeName.Substring(0, qualifiedTypeName.Length - typeSuffixLength);
             return $"{qualifiedTypeName}.{m.Name}";
         }

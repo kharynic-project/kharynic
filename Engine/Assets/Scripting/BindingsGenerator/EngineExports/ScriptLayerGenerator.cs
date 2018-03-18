@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Kharynic.Engine.Scripting
+namespace Kharynic.Engine.Scripting.BindingsGenerator.EngineExports
 {
     // Generates EcmaScript glue code for calling .net methods from scripts.
     // Generated code needs to be initialized at runtime by Runtime.RegisterAll.

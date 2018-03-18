@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kharynic.Engine.Scripting
+namespace Kharynic.Engine.Scripting.BindingsGenerator.EngineExports
 {
     internal class VarInfo
     {

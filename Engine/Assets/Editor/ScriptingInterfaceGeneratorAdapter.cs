@@ -1,4 +1,4 @@
-﻿using Kharynic.Engine.Scripting;
+﻿using Kharynic.Engine.Scripting.BindingsGenerator.EngineExports;
 
 namespace Kharynic.Engine.Editor
 {
