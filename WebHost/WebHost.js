@@ -75,21 +75,22 @@ Kharynic.WebHost.WebHost = class
         this._player = new Kharynic.WebHost.Player(this._host);
     }
 
-    _ShowWatermark() 
+    async _ShowWatermark() 
     {
         var watermark = document.createElement("div");
         watermark.id = "watermark";
         watermark.textContent = "github.com/kharynic-project\nDeveloper preview - not playable yet";
         this._host.appendChild(watermark);
-        fetch(this.constructor.EngineVersionFile).then(function(response) 
-        {
-            response.text().then(function(version) 
-            {
-                watermark.textContent = "Kharynic Engine v" + version + "\n" + watermark.textContent;
-            })
-        });
+        var engineVersion = await (await fetch(this.constructor.EngineVersionFile)).text();
+        var unityVersion = await (await fetch(this.constructor.UnityVersionFile)).text();
+        unityVersion = unityVersion.split(": ")[1].replace(/\s+/, "");
+        watermark.textContent = 
+            "Kharynic v" + engineVersion + 
+            " / Unity v" + unityVersion + "\n" + 
+            watermark.textContent;
     }
 }
 Kharynic.WebHost.WebHost.EngineVersionFile = "/Engine/Version.txt";
+Kharynic.WebHost.WebHost.UnityVersionFile = "/Engine/ProjectSettings/ProjectVersion.txt";
 Kharynic.WebHost.WebHost.Instance = undefined; // required by non-static @exports
 Kharynic.WebHost.WebHost.DefaultHost = document.body;
