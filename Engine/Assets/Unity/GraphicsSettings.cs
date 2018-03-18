@@ -14,7 +14,6 @@ namespace Kharynic.Engine.Unity
         {
             _graphicSettingsSwitchCount++;
             _highGraphicSettings = high;
-            Debug.Log($"{_framerate}fps, switching graphic settings to {(high ? "high" : "low")}");
             QualitySettings.shadows = high ? ShadowQuality.All : ShadowQuality.HardOnly;
             QualitySettings.shadowResolution = high ? ShadowResolution.High : ShadowResolution.Low;
             QualitySettings.shadowCascades = high ? 4 : 1;
@@ -30,7 +29,6 @@ namespace Kharynic.Engine.Unity
         {
             SetGraphicSettings(high: false);
             DisableAmbientLighting();
-            MonitorFramerate(TimeSpan.FromSeconds(10));
         }
         
         
@@ -59,9 +57,15 @@ namespace Kharynic.Engine.Unity
                 lastFrameCount = frameCount;
                 lastTotalTime = totalTime;
                 if (_framerate > 50 && !_highGraphicSettings && _graphicSettingsSwitchCount < 3)
+                {
+                    Debug.Log($"{_framerate}fps, switching graphic settings to high");
                     SetGraphicSettings(true);
+                }
                 else if (_framerate < 30 && _highGraphicSettings)
+                {
+                    Debug.Log($"{_framerate}fps, switching graphic settings to low");
                     SetGraphicSettings(false);
+                }
             }, nameof(MonitorFramerate), interval);
         }
     }
