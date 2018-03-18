@@ -69,6 +69,7 @@ Kharynic.WebHost.Player = class
     _InitSandbox()
     {
         var playerWindow = this._iframe.contentWindow;
+        playerWindow.console.log = function() { };
         this._SecureRequests(playerWindow);
         playerWindow.Kharynic = Kharynic;
         this._gameContainer = this._iframe.contentDocument.getElementById("gameContainer");

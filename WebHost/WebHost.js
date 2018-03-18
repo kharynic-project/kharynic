@@ -70,6 +70,8 @@ Kharynic.WebHost.WebHost = class
     async _Load()
     {
         this._splash = new Kharynic.WebHost.Splash(this._host);
+        var webHostLoadingTime = (new Date() - window.performance.timing.requestStart) / 1000;
+        console.log("WebHost: loaded after " + webHostLoadingTime + "s");
         this._player = new Kharynic.WebHost.Player(this._host);
     }
 
