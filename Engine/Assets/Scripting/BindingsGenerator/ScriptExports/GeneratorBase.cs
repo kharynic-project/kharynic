@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Kharynic.Engine.Scripting.ScriptExports
+namespace Kharynic.Engine.Scripting.BindingsGenerator.ScriptExports
 {
-    public class ScriptImportsGenerator
+    internal abstract class GeneratorBase
     {
-        private readonly IEnumerable<Function> _functions;
+        protected readonly Type TargetType;
+        protected readonly IReadOnlyList<Function> Functions;
         private static readonly Regex AttributesPattern = new Regex(@"/\*\*?@[Ee]xport\*/(?<isStatic>static )?");
         private static readonly Regex NamePattern = new Regex(@"(?<funcName>\w+)");
-        private static readonly Regex ParameterListPattern = new Regex(@"\( (?<param>(?<paramName>\w+) /\* : (?<paramType>\w+) \*/ ,? )*\)");
-        private static readonly Regex ReturnTypePattern = new Regex(@"/\* : (?<funcType>\w+) \*/");
+        private static readonly Regex ParameterListPattern = new Regex(@"\( (?<param>(?<paramName>\w+) /\* : (?<paramType>[\w.]+) \*/ ,? )*\)");
+        private static readonly Regex ReturnTypePattern = new Regex(@"/\* : (?<funcType>[\w.]+) \*/");
         private static readonly Regex SignaturePattern = new Regex(
             string.Join(@" ", 
                 AttributesPattern,
@@ -20,24 +21,33 @@ namespace Kharynic.Engine.Scripting.ScriptExports
                 ReturnTypePattern)
                 .Replace(" ", @"\s*"), 
             RegexOptions.Multiline);
+        protected virtual bool ProtectEditor => true;
         
-        private class Function
+        protected class Function
         {
             public string Name;
-            public string Type;
-            public Dictionary<string, string> Params; // Name, Type
+            public Type Type;
+            public Dictionary<string, Type> Params;
             public bool IsStatic;
         }
         
-        public ScriptImportsGenerator(Type placeholder)
+        public void Run()
         {
+            var code = GenerateCode();
+            GeneratorUtils.WriteFile(code, Path, ProtectEditor);
+        }
+        
+        protected GeneratorBase(Type targetType)
+        {
+            TargetType = targetType;
             var definitionPath = GeneratorUtils.GetSourceFilePath
-                (placeholder, "js", isUnityAsset: false, isGenerated: false);
+                (targetType, "js", isGenerated: false);
             var definition = GeneratorUtils.ReadFile(definitionPath);
-            _functions = Parse(definition);
+            Functions = Parse(definition);
+            Debug.Log($"Loaded {Functions.Count()} functions from {definitionPath}: {string.Join(", ", Functions.Select(f => f.Name))}");
         }
 
-        private IEnumerable<Function> Parse(string definition)
+        private IReadOnlyList<Function> Parse(string definition)
         {
             return definition
                 .Split('\n')
@@ -51,21 +61,17 @@ namespace Kharynic.Engine.Scripting.ScriptExports
                     return new Function
                     {
                         Name = match.Groups["funcName"].Value,
-                        Type = match.Groups["funcType"].Value,
+                        Type = Type.GetType(match.Groups["funcType"].Value),
                         Params = Enumerable.Range(0, paramNames.Count).ToDictionary(
                             i => paramNames[i].Value,
-                            i => paramTypes[i].Value),
+                            i => Type.GetType(paramTypes[i].Value)),
                         IsStatic = match.Groups["isStatic"].Success
                     };
                 }).ToArray();
         }
+        
+        public abstract string Path { get; }
 
-        public void Generate()
-        {
-            foreach (var function in _functions)
-            {
-                Debug.Log("generating " + function.Name);
-            }
-        }
+        protected abstract string GenerateCode();
     }
 }

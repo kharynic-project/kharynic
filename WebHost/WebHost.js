@@ -3,7 +3,7 @@ Kharynic.WebHost = Kharynic.WebHost || {};
 
 /**
  * Responsible for browser integration. Loads game engine.
- * Exposes script functions to the engine with @Export attribute.
+ * Exposes script functions to the engine with `@export` attribute.
  */
 Kharynic.WebHost.WebHost = class 
 {
@@ -27,7 +27,7 @@ Kharynic.WebHost.WebHost = class
      * Passes EmscriptenModule from loaded Unity gameInstance to Scripting.Runtime
      * to enable registration of exported engine methods and calls to them.
      */
-    /**@export*/ OnEngineStart() /*: void*/
+    /**@export*/ OnEngineStart() /*: System.Void*/
     {
         console.log("WebHost.OnEngineStart")
         var emscriptenModule = this._player.EmscriptenModule;
@@ -37,7 +37,7 @@ Kharynic.WebHost.WebHost = class
     /**
      * Initializes game content
      */
-    /**@export*/ OnEngineReady() /*: void*/
+    /**@export*/ OnEngineReady() /*: System.Void*/
     {
         console.log("WebHost.OnEngineReady");
         this._player.OnEngineReady();
@@ -45,12 +45,12 @@ Kharynic.WebHost.WebHost = class
         Kharynic.Game.Startup.StartGame();
     }
 
-    /**@export*/ Log(message /*: string*/) /*: void*/
+    /**@export*/ Log(message /*: System.String*/) /*: System.Void*/
     {
         this._console.log(message); 
     }
 
-    /**@export*/ GetRootUrl() /*: string*/
+    /**@export*/ GetRootUrl() /*: System.String*/
     {
         var document = this._host.ownerDocument;
         return document.location.href.replace(/\/(index.html)?$/i, "");
