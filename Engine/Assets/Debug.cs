@@ -26,8 +26,7 @@ namespace Kharynic.Engine
             // Path.GetFileName works only with same platforms path (with Windows/CallerLineNumber+WASM not)
             var fileNameStartIndex = callerFilePath.LastIndexOfAny(PathSeparators) + 1;
             var fileName = callerFilePath.Substring(fileNameStartIndex);
-            var timestamp = (Engine.Instance.RunningTime.TotalSeconds * 100) % 1000;
-            var annotation = $"    <{fileName},#{callerLineNumber}> {timestamp:000}";
+            var annotation = $"    {fileName}:{callerLineNumber}";
             const int logWidth = 80;
             var lines = message.Split('\n').Select((s, i) => (i == 0) ? s : ("  " + s)).ToArray();
             var annotationStartColumn = Math.Max(logWidth - annotation.Length, lines.Select(l=>l.Length).Max());

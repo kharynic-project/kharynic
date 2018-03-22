@@ -15,7 +15,7 @@ namespace Kharynic.Engine.Editor
                 $"//       Externals\n" +
                 $"//  Phoenix V{Kharynic.Engine.BuildInfo.Version}\n" +
                 $"// *********************";
-            ScriptingInterfaceGenerator.GenerateAllInterfaces(typeof(ScriptingInterface).Assembly, scriptHeader);
+            ScriptingInterfaceGenerator.GenerateAllInterfaces(typeof(Engine).Assembly, scriptHeader);
             UnityEditor.AssetDatabase.Refresh();
             Debug.Log($"{nameof(ScriptingInterfaceGeneratorAdapter)} finished");
         }
