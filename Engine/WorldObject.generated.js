@@ -1,9 +1,9 @@
-// Code generated on 2018.03.18 by /Engine/Assets/Scripting/ScriptLayerGenerator.cs - DO NOT EDIT.
+// Code generated on 2018.03.23 by /Engine/Assets/Scripting/BindingsGenerator/EngineExports/ScriptLayerGenerator.cs - DO NOT EDIT.
 // this file is used by scripts which cannot regenerate it, so it has to be commited
 
 // *********************
 //       Externals
-//  Phoenix V0.0.104+216.preview
+//  Phoenix V0.0.108+db3.preview
 // *********************
 
 window.Kharynic = window.Kharynic || {};

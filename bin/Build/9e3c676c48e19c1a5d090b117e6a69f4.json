@@ -1,0 +1,16 @@
+{
+"companyName": "kharynic.org",
+"productName": "engine",
+"dataUrl": "2621e2b6de55c93d0a625a9e63f6724e.unityweb",
+"wasmCodeUrl": "8c5d69bbf51f0bb8af69597f84d2b2f2.unityweb",
+"wasmFrameworkUrl": "ba06eb88256af0924dff6b58650299f2.unityweb",
+"asmCodeUrl": "7d10b8a085de615ae0faa786d0389d56.unityweb",
+"asmMemoryUrl": "1080607d7d43c6aeafa0efb2003183e7.unityweb",
+"asmFrameworkUrl": "f0c7895b0666c90f8f2407dba2839611.unityweb",
+"TOTAL_MEMORY": 268435456,
+"graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Light",
+"backgroundColor": "#524F50",
+"cacheControl": {"dataUrl": "must-revalidate"}
+}
