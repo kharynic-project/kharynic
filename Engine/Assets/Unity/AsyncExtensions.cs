@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ namespace Kharynic.Engine.Unity
 {
     public static class AsyncExtensions
     {
-        public const float MinimumTargetFps = 30f;
+        public const float MinimumTargetFps = 20f;
         public static IAwaitable WaitAsync(this IEnumerator enumerator) 
             => new Awaitable(new EnumeratorAwaiter(enumerator));
         
@@ -45,8 +46,11 @@ namespace Kharynic.Engine.Unity
         private class AsyncEnumeratorRunner : MonoBehaviour
         {
             public static readonly Lazy<AsyncEnumeratorRunner> Instance = 
-                new Lazy<AsyncEnumeratorRunner>(() => 
-                    new GameObject(nameof(AsyncEnumeratorRunner)).AddComponent<AsyncEnumeratorRunner>());
+                new Lazy<AsyncEnumeratorRunner>(() =>
+                {
+                    var existingOne = FindObjectOfType<AsyncEnumeratorRunner>();
+                    return existingOne ?? new GameObject(nameof(AsyncEnumeratorRunner)).AddComponent<AsyncEnumeratorRunner>();
+                });
             
             private static IEnumerator CreateEnumeratorWrapper(IEnumerator enumerator, Action continuation)
             {
@@ -58,7 +62,7 @@ namespace Kharynic.Engine.Unity
             {
                 yield return null;
                 const float maxDeltaTime = 1f / MinimumTargetFps;
-                while (Time.smoothDeltaTime > maxDeltaTime && UnityEngine.Random.value > 0.1)
+                while (Time.smoothDeltaTime > maxDeltaTime && UnityEngine.Random.value > 0.3)
                 {
                     var waitingTime = Time.smoothDeltaTime * 2;
                     Debug.Log($"framerate below min ({1/Time.smoothDeltaTime}fps), logic paused for {waitingTime}s");
@@ -67,13 +71,28 @@ namespace Kharynic.Engine.Unity
                 continuation();
             }
 
+            [Conditional("UNITY_EDITOR")]
+            private void AssertPlayMode()
+            {
+                #if UNITY_EDITOR
+                if (!UnityEditor.EditorApplication.isPlaying)
+                {
+                    const string errorMessage = "coroutines do not work in editor design mode";
+                    UnityEngine.Debug.LogError(errorMessage); // editor will not notice exception below
+                    throw new InvalidOperationException(errorMessage);
+                }
+                #endif
+            }
+
             public void Run(IEnumerator enumerator, Action continuation)
             {
+                AssertPlayMode();
                 StartCoroutine(CreateEnumeratorWrapper(enumerator, continuation));
             }
 
             public void Run(Action continuation)
             {
+                AssertPlayMode();
                 StartCoroutine(CreateActionWrapper(continuation));
             }
         }

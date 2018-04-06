@@ -1,6 +1,6 @@
 # Exported from Wings 3D 2.1.5
 mtllib stone-wall-segment.mtl
-o Cube1
+o stone-wall-segment
 #296 vertices, 541 faces
 v 2.00000000 0.0000000e+0 -6.1232340e-17
 v 0.0000000e+0 0.0000000e+0 6.1232340e-17
@@ -1921,7 +1921,7 @@ vn -7.4531422e-3 -8.1357635e-2 0.99665711
 vn 0.97845370 1.3406938e-2 0.20603059
 vn 0.55102478 0.51714683 0.65492812
 vn 0.97845370 1.3406938e-2 0.20603059
-g Cube1
+g stone-wall-segment
 usemtl default
 s 1
 f 5//8 125//803 36//180
